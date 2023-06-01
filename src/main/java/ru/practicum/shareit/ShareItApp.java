@@ -22,7 +22,6 @@ public class ShareItApp {
         applicationContext.scan("ru.practicum");
         applicationContext.setServletContext(tomcatContext.getServletContext());
         applicationContext.refresh();
-
         DispatcherServlet dispatcherServlet = new DispatcherServlet(applicationContext);
         Wrapper dispatcherWrapper =
                 Tomcat.addServlet(tomcatContext, "dispatcher", dispatcherServlet);
