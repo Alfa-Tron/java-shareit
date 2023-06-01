@@ -1,14 +1,11 @@
-package ru.practicum.shareit.user;
+package ru.practicum.shareit.user.dto;
 
-/**
- * TODO Sprint add-controllers.
- */
-public class User {
+public class UserDto {
     private long id;
     private String name;
     private String email;
 
-    public User(long id, String name, String email) {
+    public UserDto(long id, String name, String email) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -37,4 +34,5 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+
 }
