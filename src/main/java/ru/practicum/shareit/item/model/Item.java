@@ -1,16 +1,22 @@
 package ru.practicum.shareit.item.model;
 
+import ru.practicum.shareit.item.Marker;
 import ru.practicum.shareit.request.ItemRequest;
 
-/**
- * TODO Sprint add-controllers.
- */
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 public class Item {
     private long id;
+    @NotBlank(groups = Marker.OnCreate.class)
     private String name;
+    @NotNull(groups = Marker.OnCreate.class)
+    @NotEmpty(groups = Marker.OnCreate.class)
     private String description;
+    @NotNull(groups = Marker.OnCreate.class)
     private Boolean available;
-    private long userId;
+
     private ItemRequest request;
 
     public Item(long id, String name, String description, Boolean available, long userId, ItemRequest request) {
@@ -18,7 +24,6 @@ public class Item {
         this.name = name;
         this.description = description;
         this.available = available;
-        this.userId = userId;
         this.request = request;
     }
 
@@ -54,13 +59,6 @@ public class Item {
         this.available = available;
     }
 
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
 
     public ItemRequest getRequest() {
         return request;

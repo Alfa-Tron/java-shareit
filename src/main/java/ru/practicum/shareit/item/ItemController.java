@@ -3,78 +3,90 @@ package ru.practicum.shareit.item;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.exeption.NotFoundException;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.UserServiceImpl;
+import ru.practicum.shareit.user.UserService;
 
+
+import javax.validation.ConstraintViolation;
+import javax.validation.ValidationException;
+import javax.validation.Validator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-/**
- * TODO Sprint add-controllers.
- */
 @RestController
 @RequestMapping("/items")
 public class ItemController {
     private final ItemService itemService;
-    private final UserServiceImpl userService;
+    private final UserService userService;
+    private final Validator validator;
 
-    public ItemController(ItemService itemService, UserServiceImpl userService) {
+    public ItemController(ItemService itemService, UserService userService, Validator validator) {
         this.itemService = itemService;
         this.userService = userService;
+        this.validator = validator;
     }
 
     @PostMapping
-    public ResponseEntity<ItemDto> createItem(@RequestHeader("X-Sharer-User-Id") long userId, @RequestBody ItemDto itemDTO) {
-        if (userService.getAllUsersMap().containsKey(userId)) {
-            try {
-                itemDTO.setUserId(userId);
-                ItemDto createdItem = itemService.createItem(itemDTO);
-                return new ResponseEntity<>(createdItem, HttpStatus.CREATED);
-            } catch (IllegalArgumentException e) {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
-
+    public ResponseEntity<Item> createItem(@RequestHeader("X-Sharer-User-Id") long userId, @RequestBody Item item) {// не понимаю почему @Valid не работает, сделал так(все анотации ставил)
+        Set<ConstraintViolation<Item>> violations = validator.validate(item, Marker.OnCreate.class);
+        if (!violations.isEmpty()) {
+            throw new ValidationException();
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        if (userService.getAllUsersMap().containsKey(userId)) {
+            Item createdItem = itemService.createItem(userId, item);
+            return new ResponseEntity<>(createdItem, HttpStatus.CREATED);
+        }
+        throw new NotFoundException("user not found");
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ItemDto> getItemById(@PathVariable("id") long id) {
-        ItemDto item = itemService.getItemById(id);
+    public ResponseEntity<Item> getItemById(@PathVariable("id") long id) {
+        Item item = itemService.getItemById(id);
         if (item != null) {
             return new ResponseEntity<>(item, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new NotFoundException("item not found");
         }
     }
 
     @GetMapping
-    public ResponseEntity<List<ItemDto>> getItemByUser(@RequestHeader("X-Sharer-User-Id") long userId) {
-        List<ItemDto> items = itemService.getAllItems(userId);
+    public ResponseEntity<List<Item>> getItemByUser(@RequestHeader("X-Sharer-User-Id") long userId) {
+        List<Item> items = itemService.getAllItems(userId);
         return new ResponseEntity<>(items, HttpStatus.OK);
     }
 
     @GetMapping("/search")
-    public  ResponseEntity<List<ItemDto>> searchItems(@RequestParam("text") String searchText){
-        int k =1;
-        List<ItemDto> items = itemService.getSearchItems(searchText);
-        return new ResponseEntity<>(items,HttpStatus.OK);
+    public ResponseEntity<List<Item>> searchItems(@RequestParam("text") String searchText) {
+        List<Item> items = itemService.getSearchItems(searchText);
+        return new ResponseEntity<>(items, HttpStatus.OK);
 
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ItemDto> updateItem(@RequestHeader("X-Sharer-User-Id") long userId, @PathVariable("id") long id, @RequestBody ItemDto updatedItemDto) {
-        boolean xShared =false;
-        for(Item item : itemService.getAllItemsMap().values()){
-            if(item.getUserId() == userId) xShared =true;
+    public ResponseEntity<Item> updateItem(@RequestHeader("X-Sharer-User-Id") long userId, @PathVariable("id") long id, @RequestBody Item updatedItem) {
+        Set<ConstraintViolation<Item>> violations = validator.validate(updatedItem, Marker.OnUpdate.class);
+        if (!violations.isEmpty()) {
+            throw new ValidationException();
         }
-        if (userService.getAllUsersMap().containsKey(userId) && userService.getAllUsersMap().containsKey(userId)  && xShared) {
-           updatedItemDto.setId(id);
-            ItemDto updatedItem = itemService.updateItem(updatedItemDto);
-            return new ResponseEntity<>(updatedItem, HttpStatus.OK);
+        boolean xShared = false;
+        Map<Long, List<Item>> userItems = itemService.getAllUserItems();
+        Map<Long, Item> items = itemService.getAllItemsMap();
+        if (userItems.containsKey(userId)) {
+            for (Item item : userItems.get(userId)) {
+                if (item == items.get(id)) xShared = true;
+            }
+        }
+
+        if (userService.getAllUsersMap().containsKey(userId) && userService.getAllUsersMap().containsKey(userId) && xShared) {
+            updatedItem.setId(id);
+            Item updatedItemT = itemService.updateItem(updatedItem);
+            return new ResponseEntity<>(updatedItemT, HttpStatus.OK);
 
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        throw new NotFoundException("item not found");
     }
 
     @DeleteMapping("/{id}")
@@ -83,7 +95,7 @@ public class ItemController {
         if (deleted) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new NotFoundException("item not found");
         }
     }
 }

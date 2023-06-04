@@ -5,8 +5,7 @@ import ru.practicum.shareit.item.model.Item;
 import java.util.List;
 import java.util.Map;
 
-
-public interface ItemService {
+public interface RepositoryItem {
     Item createItem(long userId, Item item);
 
     Item getItemById(long id);
@@ -15,11 +14,11 @@ public interface ItemService {
 
     List<Item> getSearchItems(String searchText);
 
-    Item updateItem(Item updatedItemDTO);
+    Item updateItem(Item updatedItem);
 
-    boolean deleteItem(Long id);
+    Map<Long, Item> getAllItemsMap();
 
     Map<Long, List<Item>> getAllUserItems();
 
-    Map<Long, Item> getAllItemsMap();
+    boolean deleteItem(Long id);
 }

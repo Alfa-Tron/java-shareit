@@ -1,8 +1,20 @@
 package ru.practicum.shareit.user.dto;
 
+import ru.practicum.shareit.item.Marker;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Null;
+
 public class UserDto {
+    @Null(groups = Marker.class)
     private long id;
+    @NotBlank(groups = Marker.OnCreate.class)
     private String name;
+    @NotEmpty(groups = Marker.OnCreate.class)
+    @Email(groups = Marker.OnCreate.class)
+    @Email(groups = Marker.OnUpdate.class)
     private String email;
 
     public UserDto(long id, String name, String email) {

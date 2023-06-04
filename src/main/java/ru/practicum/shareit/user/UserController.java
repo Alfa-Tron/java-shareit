@@ -1,13 +1,20 @@
 package ru.practicum.shareit.user;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mapstruct.factory.Mappers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.exeption.NotFoundException;
+import ru.practicum.shareit.item.Marker;
 import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.mapper.UserMapper;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ValidationException;
+import javax.validation.Validator;
 import java.util.List;
-import java.util.regex.Pattern;
+import java.util.Set;
 
 /**
  * TODO Sprint add-controllers.
@@ -16,40 +23,34 @@ import java.util.regex.Pattern;
 @RequestMapping(path = "/users")
 public class UserController {
 
-    private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-    private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
+    private UserMapper userMapper = Mappers.getMapper(UserMapper.class);
 
     private final UserService userService;
+    private final Validator validator;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, Validator validator) {
         this.userService = userService;
+        this.validator = validator;
     }
 
     @PostMapping
+    @Validated({Marker.OnCreate.class})
     public ResponseEntity<?> createUser(@RequestBody UserDto userDTO) {
-        String email = userDTO.getEmail();
-        if (email == null || email.isEmpty()) {
-            return new ResponseEntity<>("Email is required", HttpStatus.BAD_REQUEST);
-        }
-
-        if (!EMAIL_PATTERN.matcher(email).matches()) {
-            return new ResponseEntity<>("Invalid email format", HttpStatus.BAD_REQUEST);
+        Set<ConstraintViolation<UserDto>> violations = validator.validate(userDTO, Marker.OnCreate.class);
+        if (!violations.isEmpty()) {
+            throw new ValidationException();
         }
         try {
-            UserDto createdUser = userService.createUser(userDTO);
+            UserDto createdUser = userService.createUser(userMapper.userDtoToUser(userDTO));
             return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
-            if (e.getMessage().equals("User with the same email already exists")) {
-                return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
-            } else {
-                return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-            }
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDto>> getAllUsers() {
-        List<UserDto> users = userService.getAllUsers();
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
@@ -59,23 +60,20 @@ public class UserController {
         if (user != null) {
             return new ResponseEntity<>(user, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new NotFoundException("Объект не найден");
         }
     }
 
     @PatchMapping("/{id}")
+    @Validated({Marker.OnUpdate.class})
     public ResponseEntity<?> updateUser(@PathVariable("id") long id, @RequestBody UserDto userDto) {
-        if (userDto.getId() != 0) return new ResponseEntity<>("id in body", HttpStatus.BAD_REQUEST);
-
-        String email = userDto.getEmail();
-        userDto.setId(id);
-        if (email != null) {
-            if (!EMAIL_PATTERN.matcher(email).matches()) {
-                return new ResponseEntity<>("Invalid email format", HttpStatus.BAD_REQUEST);
-            }
+        Set<ConstraintViolation<UserDto>> violations = validator.validate(userDto, Marker.OnUpdate.class);
+        if (!violations.isEmpty()) {
+            throw new ValidationException();
         }
+        userDto.setId(id);
         try {
-            UserDto createdUser = userService.updateUser(userDto);
+            UserDto createdUser = userService.updateUser(userMapper.userDtoToUser(userDto));
             return new ResponseEntity<>(createdUser, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
@@ -90,7 +88,7 @@ public class UserController {
         if (deleted) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new NotFoundException("user not found");
         }
     }
 }
