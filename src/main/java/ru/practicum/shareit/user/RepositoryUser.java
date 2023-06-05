@@ -14,5 +14,5 @@ public interface RepositoryUser {
 
     Map<Long, User> getAllUsersMap();
 
-    boolean deleteUser(long id);
+    void deleteUser(long id);
 }

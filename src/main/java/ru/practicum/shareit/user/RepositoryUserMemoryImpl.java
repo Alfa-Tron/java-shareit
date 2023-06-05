@@ -55,11 +55,10 @@ public class RepositoryUserMemoryImpl implements RepositoryUser {
     }
 
     @Override
-    public boolean deleteUser(long id) {
+    public void deleteUser(long id) {
         boolean delete = users.containsKey(id);
         if (!delete) throw new NotFoundException("user not found");
         users.remove(id);
-        return true;
     }
 
     private boolean isEmailUnique(String email) {

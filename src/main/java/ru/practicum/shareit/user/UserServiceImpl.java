@@ -41,9 +41,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean deleteUser(long id) {
-
-        return repositoryUserMemory.deleteUser(id);
+    public void deleteUser(long id) {
+         repositoryUserMemory.deleteUser(id);
     }
 
 

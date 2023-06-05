@@ -2,45 +2,51 @@ package ru.practicum.shareit.item;
 
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.mapper.UserMapper;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/items")
 public class ItemController {
     private final ItemService itemService;
+    private final ItemMapper itemMapper;
 
-    public ItemController(ItemService itemService) {
+    public ItemController(ItemService itemService, ItemMapper itemMapper) {
         this.itemService = itemService;
+        this.itemMapper = itemMapper;
     }
 
     @PostMapping
-    public Item createItem(@RequestHeader("X-Sharer-User-Id") long userId, @Validated({Marker.OnCreate.class}) @RequestBody Item item) {
-        return itemService.createItem(userId, item);
+    public ItemDto createItem(@RequestHeader("X-Sharer-User-Id") long userId, @Validated({Marker.OnCreate.class}) @RequestBody ItemDto item) {
+        return itemMapper.ItemToItemDto(itemService.createItem(userId, itemMapper.ItemDtoToItem(item)));
     }
 
     @GetMapping("/{id}")
-    public Item getItemById(@PathVariable("id") long id) {
+    public ItemDto getItemById(@PathVariable("id") long id) {
 
-        return itemService.getItemById(id);
+        return itemMapper.ItemToItemDto(itemService.getItemById(id));
     }
 
     @GetMapping
-    public List<Item> getItemByUser(@RequestHeader("X-Sharer-User-Id") long userId) {
-        return itemService.getAllItems(userId);
+    public List<ItemDto> getItemByUser(@RequestHeader("X-Sharer-User-Id") long userId) {
+        return itemMapper.ListToDtoList(itemService.getAllItems(userId));
     }
 
     @GetMapping("/search")
-    public List<Item> searchItems(@RequestParam("text") String searchText) {
-        return itemService.getSearchItems(searchText);
+    public List<ItemDto> searchItems(@RequestParam("text") String searchText) {
+        return itemMapper.ListToDtoList(itemService.getSearchItems(searchText));
 
     }
 
     @PatchMapping("/{id}")
-    public Item updateItem(@RequestHeader("X-Sharer-User-Id") long userId, @PathVariable("id") long id, @Validated({Marker.OnUpdate.class}) @RequestBody Item updatedItem) {
+    public ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") long userId, @PathVariable("id") long id, @Validated({Marker.OnUpdate.class}) @RequestBody ItemDto updatedItem) {
         updatedItem.setId(id);
-        return itemService.updateItem(userId, updatedItem);
+        return itemMapper.ItemToItemDto(itemService.updateItem(userId, itemMapper.ItemDtoToItem(updatedItem)));
 
     }
 

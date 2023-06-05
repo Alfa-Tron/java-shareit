@@ -18,7 +18,7 @@ public class UserController {
 
     private final UserService userService;
 
-    public UserController(UserService userService, Validator validator, UserMapper userMapper) {
+    public UserController(UserService userService, UserMapper userMapper) {
         this.userService = userService;
         this.userMapper = userMapper;
     }
@@ -29,8 +29,8 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public List<UserDto> getAllUsers() {
+        return userMapper.listToDtoList(userService.getAllUsers());
     }
 
     @GetMapping("/{id}")
@@ -46,8 +46,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public boolean deleteUser(@PathVariable("id") long id) {
-        return userService.deleteUser(id);
-
+    public void deleteUser(@PathVariable("id") long id) {
+        userService.deleteUser(id);
     }
 }

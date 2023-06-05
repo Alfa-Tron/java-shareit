@@ -17,5 +17,5 @@ public interface UserService {
 
     Map<Long, User> getAllUsersMap();
 
-    boolean deleteUser(long id);
+    void deleteUser(long id);
 }
