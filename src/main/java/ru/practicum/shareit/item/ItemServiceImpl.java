@@ -1,7 +1,9 @@
 package ru.practicum.shareit.item;
 
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exeption.NotFoundException;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.UserService;
 
 import java.util.List;
 import java.util.Map;
@@ -9,16 +11,15 @@ import java.util.Map;
 @Service
 public class ItemServiceImpl implements ItemService {
     private final RepositoryItemImpl repository;
+    private final UserService userService;
 
-    private ItemServiceImpl(RepositoryItemImpl repository) {
+    private ItemServiceImpl(RepositoryItemImpl repository, UserService userService) {
         this.repository = repository;
+        this.userService = userService;
     }
-
-    private long id = 1;
 
     @Override
     public Item createItem(long userId, Item item) {
-        item.setId(id++);
         return repository.createItem(userId, item);
     }
 
@@ -39,9 +40,22 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public Item updateItem(Item updatedItem) {
+    public Item updateItem(long userId, Item updatedItem) {
+        boolean xShared = false;
+        Map<Long, List<Item>> userItems = getAllUserItems();
+        Map<Long, Item> items = getAllItemsMap();
+        if (userItems.containsKey(userId)) {
+            for (Item item : userItems.get(userId)) {
+                if (item == items.get(updatedItem.getId())) xShared = true;
+            }
+        }
 
-        return repository.updateItem(updatedItem);
+        if (userService.getAllUsersMap().containsKey(userId) && userService.getAllUsersMap().containsKey(userId) && xShared) {
+            return repository.updateItem(updatedItem);
+        }
+        throw new NotFoundException("item not found");
+
+
     }
 
     @Override

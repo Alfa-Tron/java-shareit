@@ -1,19 +1,11 @@
 package ru.practicum.shareit.user;
 
-import org.springframework.validation.annotation.Validated;
-import ru.practicum.shareit.item.Marker;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 public class User {
     private long id;
-    @NotBlank(groups = Marker.OnCreate.class)
+
     private String name;
-    @NotEmpty(groups = Marker.OnCreate.class)
-    @Email(groups = Marker.class)
+
     private String email;
 
     public User(long id, String name, String email) {

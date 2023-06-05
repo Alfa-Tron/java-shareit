@@ -11,7 +11,6 @@ public class Item {
     private long id;
     @NotBlank(groups = Marker.OnCreate.class)
     private String name;
-    @NotNull(groups = Marker.OnCreate.class)
     @NotEmpty(groups = Marker.OnCreate.class)
     private String description;
     @NotNull(groups = Marker.OnCreate.class)

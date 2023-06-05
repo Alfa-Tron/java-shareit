@@ -15,7 +15,7 @@ public interface ItemService {
 
     List<Item> getSearchItems(String searchText);
 
-    Item updateItem(Item updatedItemDTO);
+    Item updateItem(long userId, Item updatedItemDTO);
 
     boolean deleteItem(Long id);
 

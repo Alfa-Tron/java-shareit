@@ -7,13 +7,13 @@ import java.util.Map;
 
 
 public interface UserService {
-    UserDto createUser(User user);
+    User createUser(User user);
 
     List<User> getAllUsers();
 
-    UserDto getUserById(long id);
+    User getUserById(long id);
 
-    UserDto updateUser(User user);
+    User updateUser(User user);
 
     Map<Long, User> getAllUsersMap();
 

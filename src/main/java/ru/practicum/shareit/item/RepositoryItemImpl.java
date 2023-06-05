@@ -1,32 +1,46 @@
 package ru.practicum.shareit.item;
 
 import org.springframework.stereotype.Repository;
+import ru.practicum.shareit.exeption.NotFoundException;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.RepositoryUser;
 
 import java.util.*;
 
 @Repository
 public class RepositoryItemImpl implements RepositoryItem {
     private final Map<Long, List<Item>> userItemIndex = new LinkedHashMap<>();
+    private final RepositoryUser repositoryUser;
     private final Map<Long, Item> items = new HashMap<>();
+    private long id = 1;
+
+    public RepositoryItemImpl(RepositoryUser repositoryUser) {
+        this.repositoryUser = repositoryUser;
+    }
 
     @Override
     public Item createItem(long userId, Item item) {
-        final List<Item> items = userItemIndex.computeIfAbsent(userId, k -> new ArrayList<>());
-        items.add(item);
-        this.items.put(item.getId(), item);
-        return item;
+        if (repositoryUser.getAllUsersMap().containsKey(userId)) {
+            item.setId(id++);
+            final List<Item> items = userItemIndex.computeIfAbsent(userId, k -> new ArrayList<>());
+            items.add(item);
+            this.items.put(item.getId(), item);
+            return item;
+        }
+        throw new NotFoundException("user not found");
+
     }
 
     @Override
     public Item getItemById(long id) {
+        if (!items.containsKey(id)) throw new NotFoundException("item not found");
         return items.get(id);
     }
 
     @Override
     public List<Item> getAllItems(long userId) {
 
-        return new ArrayList<>(userItemIndex.get(userId));
+        return new ArrayList<>(userItemIndex.getOrDefault(userId, Collections.emptyList()));
     }
 
     @Override
@@ -64,9 +78,8 @@ public class RepositoryItemImpl implements RepositoryItem {
 
     @Override
     public boolean deleteItem(Long id) {
-
+        if (!items.containsKey(id)) throw new NotFoundException("item not found");
         items.remove(id);
-
         return true;
     }
 }

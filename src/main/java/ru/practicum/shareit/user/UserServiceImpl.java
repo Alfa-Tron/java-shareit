@@ -1,7 +1,6 @@
 package ru.practicum.shareit.user;
 
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.user.dto.UserDto;
 
 import java.util.List;
 import java.util.Map;
@@ -17,8 +16,8 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    public UserDto createUser(User userDto) {
-        return repository.createUser(userDto);
+    public User createUser(User user) {
+        return repository.createUser(user);
     }
 
     @Override
@@ -31,14 +30,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getUserById(long id) {
+    public User getUserById(long id) {
         return repository.getUserById(id);
     }
 
     @Override
-    public UserDto updateUser(User userDto) {
+    public User updateUser(User user) {
 
-        return repository.updateUser(userDto);
+        return repository.updateUser(user);
     }
 
     @Override
