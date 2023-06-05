@@ -6,11 +6,11 @@ import ru.practicum.shareit.exeption.NotFoundException;
 import java.util.*;
 
 @Repository
-public class RepositoryUserImpl implements RepositoryUser {
+public class RepositoryUserMemoryImpl implements RepositoryUser {
     private final Map<Long, User> users;
     private long id = 1;
 
-    public RepositoryUserImpl() {
+    public RepositoryUserMemoryImpl() {
         users = new HashMap<>();
     }
 
@@ -40,11 +40,11 @@ public class RepositoryUserImpl implements RepositoryUser {
 
     @Override
     public User updateUser(User user) {
-        if (!isEmailUnique(user.getEmail()) && !users.get(user.getId()).getEmail().equals(user.getEmail()))
-            throw new IllegalArgumentException();
         User userNew = users.get(user.getId());
+        if (!isEmailUnique(user.getEmail()) && !userNew.getEmail().equals(user.getEmail()))
+            throw new IllegalArgumentException();
         if (user.getEmail() != null && !user.getEmail().isEmpty()) userNew.setEmail(user.getEmail());
-        if (user.getName() != null && !user.getName().isEmpty()) userNew.setName(user.getName());
+        if (user.getName() != null && !user.getName().isBlank()) userNew.setName(user.getName());
 
         return userNew;
     }

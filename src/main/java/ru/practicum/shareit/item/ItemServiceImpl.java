@@ -3,76 +3,60 @@ package ru.practicum.shareit.item;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exeption.NotFoundException;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.UserService;
+import ru.practicum.shareit.user.RepositoryUser;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+
+import java.util.Objects;
 
 @Service
 public class ItemServiceImpl implements ItemService {
-    private final RepositoryItemImpl repository;
-    private final UserService userService;
+    private final RepositoryItem repositoryItemMemory;
+    private final RepositoryUser repositoryUserMemory;
 
-    private ItemServiceImpl(RepositoryItemImpl repository, UserService userService) {
-        this.repository = repository;
-        this.userService = userService;
+    private ItemServiceImpl(RepositoryItem repositoryItemMemory, RepositoryUser repositoryUserMemory) {
+        this.repositoryItemMemory = repositoryItemMemory;
+        this.repositoryUserMemory = repositoryUserMemory;
     }
 
     @Override
     public Item createItem(long userId, Item item) {
-        return repository.createItem(userId, item);
+        if (repositoryUserMemory.getAllUsersMap().containsKey(userId)) {
+            return repositoryItemMemory.createItem(userId, item);
+        }
+        throw new NotFoundException("user not found");
     }
 
     @Override
     public Item getItemById(long id) {
-        return repository.getItemById(id);
+        return repositoryItemMemory.getItemById(id);
     }
 
     @Override
     public List<Item> getAllItems(long userId) {
-        return repository.getAllItems(userId);
+        return repositoryItemMemory.getAllItems(userId);
     }
 
     @Override
     public List<Item> getSearchItems(String searchText) {
+        if (searchText.isBlank()) return Collections.emptyList();
 
-        return repository.getSearchItems(searchText);
+        return repositoryItemMemory.getSearchItems(searchText);
     }
 
     @Override
     public Item updateItem(long userId, Item updatedItem) {
-        boolean xShared = false;
-        Map<Long, List<Item>> userItems = getAllUserItems();
-        Map<Long, Item> items = getAllItemsMap();
-        if (userItems.containsKey(userId)) {
-            for (Item item : userItems.get(userId)) {
-                if (item == items.get(updatedItem.getId())) xShared = true;
-            }
-        }
-
-        if (userService.getAllUsersMap().containsKey(userId) && userService.getAllUsersMap().containsKey(userId) && xShared) {
-            return repository.updateItem(updatedItem);
+        Item item = repositoryItemMemory.getItemById(updatedItem.getId());
+        if (Objects.equals(item.getOwner(), userId)) {
+            return repositoryItemMemory.updateItem(updatedItem);
         }
         throw new NotFoundException("item not found");
-
-
     }
 
     @Override
-    public boolean deleteItem(Long id) {
-        return repository.deleteItem(id);
-    }
-
-    public Map<Long, Item> getAllItemsMap() {
-        return repository.getAllItemsMap();
-    }
-
-    public Map<Long, List<Item>> getAllUserItems() {
-        return repository.getAllUserItems();
-    }
-
-    public boolean deleteItem(long id) {
-        return repository.deleteItem(id);
+    public void deleteItem(long id) {
+        repositoryItemMemory.deleteItem(id);
     }
 
 }

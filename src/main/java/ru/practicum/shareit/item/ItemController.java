@@ -16,7 +16,7 @@ public class ItemController {
     }
 
     @PostMapping
-    public Item createItem(@RequestHeader("X-Sharer-User-Id") long userId, @Validated({Marker.OnCreate.class}) @RequestBody Item item) {// не понимаю почему @Valid не работает, сделал так(все анотации ставил)
+    public Item createItem(@RequestHeader("X-Sharer-User-Id") long userId, @Validated({Marker.OnCreate.class}) @RequestBody Item item) {
         return itemService.createItem(userId, item);
     }
 
@@ -45,8 +45,8 @@ public class ItemController {
     }
 
     @DeleteMapping("/{id}")
-    public boolean deleteItem(@PathVariable("id") long id) {
-        return itemService.deleteItem(id);
+    public void deleteItem(@PathVariable("id") long id) {
+        itemService.deleteItem(id);
     }
 }
 

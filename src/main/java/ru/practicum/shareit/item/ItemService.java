@@ -17,9 +17,6 @@ public interface ItemService {
 
     Item updateItem(long userId, Item updatedItemDTO);
 
-    boolean deleteItem(Long id);
+    void deleteItem(long id);
 
-    Map<Long, List<Item>> getAllUserItems();
-
-    Map<Long, Item> getAllItemsMap();
 }

@@ -16,13 +16,16 @@ public class Item {
     @NotNull(groups = Marker.OnCreate.class)
     private Boolean available;
 
+    private Long owner;
+
     private ItemRequest request;
 
-    public Item(long id, String name, String description, Boolean available, long userId, ItemRequest request) {
+    public Item(long id, String name, String description, Boolean available, long userId, Long owner, ItemRequest request) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.available = available;
+        this.owner = owner;
         this.request = request;
     }
 
@@ -65,5 +68,13 @@ public class Item {
 
     public void setRequest(ItemRequest request) {
         this.request = request;
+    }
+
+    public Long getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Long owner) {
+        this.owner = owner;
     }
 }

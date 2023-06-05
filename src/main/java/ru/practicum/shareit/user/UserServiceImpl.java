@@ -9,41 +9,41 @@ import java.util.Map;
 public class UserServiceImpl implements UserService {
 
 
-    private final RepositoryUser repository;
+    private final RepositoryUser repositoryUserMemory;
 
-    public UserServiceImpl(RepositoryUser repository) {
-        this.repository = repository;
+    public UserServiceImpl(RepositoryUser repositoryUserMemory) {
+        this.repositoryUserMemory = repositoryUserMemory;
     }
 
 
     public User createUser(User user) {
-        return repository.createUser(user);
+        return repositoryUserMemory.createUser(user);
     }
 
     @Override
     public List<User> getAllUsers() {
-        return repository.getAllUsers();
+        return repositoryUserMemory.getAllUsers();
     }
 
     public Map<Long, User> getAllUsersMap() {
-        return repository.getAllUsersMap();
+        return repositoryUserMemory.getAllUsersMap();
     }
 
     @Override
     public User getUserById(long id) {
-        return repository.getUserById(id);
+        return repositoryUserMemory.getUserById(id);
     }
 
     @Override
     public User updateUser(User user) {
 
-        return repository.updateUser(user);
+        return repositoryUserMemory.updateUser(user);
     }
 
     @Override
     public boolean deleteUser(long id) {
 
-        return repository.deleteUser(id);
+        return repositoryUserMemory.deleteUser(id);
     }
 
 
