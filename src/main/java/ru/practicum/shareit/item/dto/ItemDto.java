@@ -16,17 +16,11 @@ public class ItemDto {
     @NotNull(groups = Marker.OnCreate.class)
     private Boolean available;
 
-    private Long owner;
-
-    private ItemRequest request;
-
-    public ItemDto(long id, String name, String description, Boolean available, Long owner, ItemRequest request) {
+    public ItemDto(long id, String name, String description, Boolean available) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.available = available;
-        this.owner = owner;
-        this.request = request;
     }
 
     public long getId() {
@@ -61,20 +55,4 @@ public class ItemDto {
         this.available = available;
     }
 
-
-    public ItemRequest getRequest() {
-        return request;
-    }
-
-    public void setRequest(ItemRequest request) {
-        this.request = request;
-    }
-
-    public Long getOwner() {
-        return owner;
-    }
-
-    public void setOwner(Long owner) {
-        this.owner = owner;
-    }
 }
