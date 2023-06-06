@@ -1,14 +1,20 @@
-package ru.practicum.shareit.user;
+package ru.practicum.shareit.user.dto;
 
+import ru.practicum.shareit.item.Marker;
 
-public class User {
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+
+public class UserDto {
     private long id;
-
+    @NotBlank(groups = Marker.OnCreate.class)
     private String name;
-
+    @NotEmpty(groups = {Marker.OnCreate.class})
+    @Email(groups = Marker.OnCreate.class)
     private String email;
 
-    public User(long id, String name, String email) {
+    public UserDto(long id, String name, String email) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -37,4 +43,5 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+
 }
