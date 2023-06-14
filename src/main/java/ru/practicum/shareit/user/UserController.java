@@ -6,7 +6,6 @@ import ru.practicum.shareit.item.Marker;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 
-import javax.validation.Validator;
 import java.util.List;
 
 

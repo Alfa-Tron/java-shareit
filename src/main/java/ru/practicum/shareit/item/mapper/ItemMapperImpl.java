@@ -8,15 +8,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class ItemMapperImpl implements ItemMapper{
+public class ItemMapperImpl implements ItemMapper {
     @Override
     public Item ItemDtoToItem(ItemDto itemDto) {
-        return new Item(itemDto.getId(),itemDto.getName(),itemDto.getDescription(),itemDto.isAvailable());
+        return new Item(itemDto.getId(), itemDto.getName(), itemDto.getDescription(), itemDto.isAvailable());
     }
 
     @Override
     public ItemDto ItemToItemDto(Item item) {
-        return new ItemDto(item.getId(),item.getName(),item.getDescription(),item.isAvailable());
+        return new ItemDto(item.getId(), item.getName(), item.getDescription(), item.isAvailable());
     }
 
     @Override

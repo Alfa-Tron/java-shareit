@@ -18,7 +18,6 @@ public class RepositoryItemMemoryImpl implements RepositoryItem {
     @Override
     public Item createItem(long userId, Item item) {
         item.setId(id++);
-        item.setOwner(userId);
         final List<Item> items = userItemIndex.computeIfAbsent(userId, k -> new ArrayList<>());
         items.add(item);
         this.items.put(item.getId(), item);

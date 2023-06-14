@@ -1,20 +1,28 @@
 package ru.practicum.shareit.request;
 
+import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import ru.practicum.shareit.user.User;
 
-import java.time.LocalDateTime;
-
+import javax.persistence.*;
+//что то не понял зачем нам этот класс)))
+@Entity
+@Table(name = "requests")
+@NoArgsConstructor
+@EnableJpaRepositories(basePackages = "ru.practicum")
 public class ItemRequest {
+    @Id
     private long id;
+    @Column(nullable = false)
     private String description;
+    @ManyToOne
+    @JoinColumn(name = "requestor_id", nullable = false)
     private User requestor;
-    private LocalDateTime created;
 
-    public ItemRequest(long id, String description, User requestor, LocalDateTime created) {
+    public ItemRequest(long id, String description, User requestor) {
         this.id = id;
         this.description = description;
         this.requestor = requestor;
-        this.created = created;
     }
 
     public long getId() {
@@ -39,13 +47,5 @@ public class ItemRequest {
 
     public void setRequestor(User requestor) {
         this.requestor = requestor;
-    }
-
-    public LocalDateTime getCreated() {
-        return created;
-    }
-
-    public void setCreated(LocalDateTime created) {
-        this.created = created;
     }
 }

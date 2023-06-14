@@ -1,28 +1,25 @@
 package ru.practicum.shareit.booking.dto;
 
-import ru.practicum.shareit.booking.Booker;
 import ru.practicum.shareit.booking.BookingStatus;
 import ru.practicum.shareit.item.model.Item;
 
-
 import java.time.LocalDateTime;
 
-public class BookingDto {
+public class BookingItemsDto {
     private Long id;
     private LocalDateTime start;
     private LocalDateTime end;
-    private long itemId;
+    private Long itemId;
     private Item item;
-    private Booker booker;
+    private Long bookerId;
     private BookingStatus status;
 
-
-    public BookingDto(Long id, LocalDateTime start, LocalDateTime end, BookingStatus status, Booker id1, Item item) {
+    public BookingItemsDto(Long id, LocalDateTime start, LocalDateTime end, BookingStatus status, Long id1, Item item) {
         this.id = id;
         this.start = start;
         this.end = end;
         this.status = status;
-        booker = id1;
+        this.bookerId = id1;
         this.item = item;
     }
 
@@ -30,7 +27,7 @@ public class BookingDto {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -54,16 +51,16 @@ public class BookingDto {
         return itemId;
     }
 
-    public void setItemId(long itemId) {
+    public void setItemId(Long itemId) {
         this.itemId = itemId;
     }
 
-    public Booker getBooker() {
-        return booker;
+    public Long getBookerId() {
+        return bookerId;
     }
 
-    public void setBooker(Booker booker) {
-        this.booker = booker;
+    public void setBookerId(Long bookerId) {
+        this.bookerId = bookerId;
     }
 
     public BookingStatus getStatus() {
