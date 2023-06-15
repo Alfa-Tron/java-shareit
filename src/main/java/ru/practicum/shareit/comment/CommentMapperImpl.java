@@ -9,12 +9,12 @@ import java.util.List;
 public class CommentMapperImpl implements CommentMapper {
     @Override
     public CommentDto CommentToDto(Comment comment) {
-        return new CommentDto(comment.getId(), comment.getText(), comment.getItem(), comment.getAuthorName().getName(), comment.getCreated().toString());
+        return new CommentDto(comment.getId(), comment.getText(), comment.getAuthorName().getName(), comment.getCreated().toString());
     }
 
     @Override
-    public Comment CommentDtoToComment(CommentDto comment) {
-        return new Comment(comment.getText(), comment.getItem());
+    public Comment CommentDtoInToComment(CommentDtoIn comment) {
+        return new Comment(comment.getText());
     }
 
     @Override

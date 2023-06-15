@@ -8,7 +8,7 @@ import java.util.List;
 public interface CommentMapper {
     CommentDto CommentToDto(Comment comment);
 
-    Comment CommentDtoToComment(CommentDto comment);
+    Comment CommentDtoInToComment(CommentDtoIn comment);
 
     List<CommentDto> CommentListToDTos(List<Comment> comments);
 }

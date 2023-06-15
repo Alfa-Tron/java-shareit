@@ -1,10 +1,9 @@
 package ru.practicum.shareit.booking.mapper;
 
 import org.springframework.stereotype.Component;
-import ru.practicum.shareit.booking.Booker;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.booking.dto.BookingItemsDto;
+import ru.practicum.shareit.booking.dto.BookingDtoIn;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,26 +12,21 @@ import java.util.List;
 public class BookingMapperImpl implements BookingMapper {
 
     @Override
-    public Booking BookingDtoToBooking(BookingDto bookingDto) {
-        return new Booking(bookingDto.getStart(),bookingDto.getEnd(),bookingDto.getStatus());
+    public Booking BookingDtoInToBooking(BookingDtoIn bookingDto) {
+        return new Booking(bookingDto.getStart(), bookingDto.getEnd());
     }
 
     @Override
     public BookingDto BookingToBookingDto(Booking booking) {
-        return new BookingDto(booking.getId(), booking.getStart(),booking.getEnd(),booking.getStatus(),new Booker(booking.getBooker().getId()),booking.getItem());
+        return new BookingDto(booking.getId(), booking.getStart().toString(), booking.getEnd().toString(), booking.getStatus().toString(), booking.getBooker().getId(), booking.getItem().getId(), booking.getItem().getName());
     }
 
     @Override
-    public List<BookingDto> BookingListToBookingDtoList(List<Booking> bookingList){
+    public List<BookingDto> BookingListToBookingDtoList(List<Booking> bookingList) {
         List<BookingDto> list = new ArrayList<>();
-        for(Booking l : bookingList){
+        for (Booking l : bookingList) {
             list.add(BookingToBookingDto(l));
         }
         return list;
-    }
-
-    @Override
-    public BookingItemsDto BookingToBookingItemsDto(Booking booking) {
-        return new BookingItemsDto(booking.getId(), booking.getStart(),booking.getEnd(),booking.getStatus(), booking.getBooker().getId(), booking.getItem());
     }
 }

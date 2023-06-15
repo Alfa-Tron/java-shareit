@@ -1,24 +1,20 @@
 package ru.practicum.shareit.user;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exeption.NotFoundException;
 import ru.practicum.shareit.user.jpa.UserRepository;
 
-import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
     private final UserRepository repositoryUser;
-
-    @Autowired
-    public UserServiceImpl(UserRepository repositoryUser) {
-        this.repositoryUser = repositoryUser;
-    }
-
+    @Transactional
     public User createUser(User user) {
         return repositoryUser.save(user);
     }
@@ -36,13 +32,8 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User updateUser(User user) {
-        Optional<User> existingUser = repositoryUser.findById(user.getId());
-        User currentUser;
-        if (existingUser.isPresent()) {
-            currentUser = existingUser.get();
-        } else {
-            throw new NotFoundException("User not found");
-        }
+        User currentUser = repositoryUser.findById(user.getId()).orElseThrow(() -> new NotFoundException("User not found"));
+
         if (user.getName() != null && !user.getName().isBlank()) {
             currentUser.setName(user.getName());
         }
@@ -50,7 +41,7 @@ public class UserServiceImpl implements UserService {
         if (user.getEmail() != null && !user.getEmail().isEmpty()) {
             currentUser.setEmail(user.getEmail());
         }
-        return repositoryUser.save(currentUser);
+        return currentUser;
 
     }
 

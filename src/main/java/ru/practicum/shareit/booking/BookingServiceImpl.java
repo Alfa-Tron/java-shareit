@@ -1,7 +1,9 @@
 package ru.practicum.shareit.booking;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import ru.practicum.shareit.exeption.NotFoundException;
 import ru.practicum.shareit.exeption.UnsupportedStatusException;
@@ -10,7 +12,6 @@ import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.jpa.UserRepository;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,17 +20,13 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
 
-
-    public BookingServiceImpl(BookingRepository bookingRepository, UserRepository userRepository, ItemRepository itemRepository) {
-        this.bookingRepository = bookingRepository;
-        this.userRepository = userRepository;
-        this.itemRepository = itemRepository;
-    }
 
     @Override
     @Transactional
@@ -47,8 +44,6 @@ public class BookingServiceImpl implements BookingService {
         LocalDateTime start = booking.getStart();
         LocalDateTime end = booking.getEnd();
         LocalDateTime now = LocalDateTime.now();
-        if (start == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "startTime = null");
-        if (end == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "endTime = null");
         if (now.isAfter(start)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "start time is after");
         if (now.isAfter(end)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "end time is after");
         if (start.isAfter(end)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "startTime < EndTime");
@@ -84,7 +79,6 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    @Transactional
     public Booking getBooking(Long bookingId, long userId) {
 
         Optional<Booking> booking = bookingRepository.findById(bookingId);
@@ -95,66 +89,77 @@ public class BookingServiceImpl implements BookingService {
 
     }
 
-    @Override
-    @Transactional
-    public List<Booking> getAllBookings(long userId, String state) {
-        Status[] statuses = Status.values();
-        List<String> validStatuses = Arrays.stream(statuses)
-                .map(Status::name)
+
+    private void checkStatus(String state) {
+        State[] States = State.values();
+        List<String> validStatuses = Arrays.stream(States)
+                .map(State::name)
                 .collect(Collectors.toList());
 
         if (!validStatuses.contains(state)) {
             throw new UnsupportedStatusException();
         }
+    }
+
+    @Override
+    public List<Booking> getAllBookings(long userId, String state) {
+        checkStatus(state);
         if (userRepository.findById(userId).isEmpty()) throw new NotFoundException("User not found");
         List<Booking> bookings = null;
+        State status = State.valueOf(state);
 
-        if (state.equals("ALL")) {
-            bookings = bookingRepository.findAllByBooker_IdOrderByStartDesc(userId);
-        } else if (state.equals("FUTURE")) {
-            bookings = bookingRepository.findByBookerIdAndStartIsAfterOrderByStartDesc(userId, LocalDateTime.now());
-        } else if (state.equals("WAITING")) {
-            bookings = bookingRepository.findAllByStatusAndBookerId(BookingStatus.WAITING, userId);
-        } else if (state.equals("REJECTED")) {
-            bookings = bookingRepository.findAllByStatusAndBookerId(BookingStatus.REJECTED, userId);
-        } else if (state.equals("CURRENT")) {
-            bookings = bookingRepository.findAllByBookerIdAndStartBeforeAndEndAfter(userId, LocalDateTime.now(), LocalDateTime.now());
-        } else if (state.equals("PAST")) {
-            bookings = bookingRepository.findAllByBookerIdAndEndBeforeOrderByStartDesc(userId, LocalDateTime.now());
+        switch (status) {
+            case ALL:
+                bookings = bookingRepository.findAllByBooker_IdOrderByStartDesc(userId);
+                break;
+            case FUTURE:
+                bookings = bookingRepository.findByBookerIdAndStartIsAfterOrderByStartDesc(userId, LocalDateTime.now());
+                break;
+            case WAITING:
+                bookings = bookingRepository.findAllByStatusAndBookerId(BookingStatus.WAITING, userId);
+                break;
+            case REJECTED:
+                bookings = bookingRepository.findAllByStatusAndBookerId(BookingStatus.REJECTED, userId);
+                break;
+            case CURRENT:
+                bookings = bookingRepository.findAllByBookerIdAndStartBeforeAndEndAfter(userId, LocalDateTime.now(), LocalDateTime.now());
+                break;
+            case PAST:
+                bookings = bookingRepository.findAllByBookerIdAndEndBeforeOrderByStartDesc(userId, LocalDateTime.now());
+                break;
         }
 
         return bookings;
     }
 
     @Override
-    @Transactional
     public List<Booking> getBookingOwner(long userId, String state) {
         Optional<User> userOptional = userRepository.findById(userId);
         if (userOptional.isEmpty()) {
             throw new NotFoundException("User not found");
         }
-        Status[] statuses = Status.values();
-        List<String> validStatuses = Arrays.stream(statuses)
-                .map(Status::name)
-                .collect(Collectors.toList());
-
-        if (!validStatuses.contains(state)) {
-            throw new UnsupportedStatusException();
-        }
-
+        checkStatus(state);
+        State status = State.valueOf(state);
         List<Booking> bookings = new ArrayList<>();
-        if (state.equals("ALL")) {
-            bookings.addAll(bookingRepository.findAllByItem_Owner_Id_OrderByStartDesc(userId));
-        } else if (state.equals("FUTURE")) {
-            bookings.addAll(bookingRepository.findAllByItem_Owner_IdAndStartAfterOrderByStartDesc(userId, LocalDateTime.now()));
-        } else if (state.equals("WAITING")) {
-            bookings = bookingRepository.findAllByStatusAndItem_Owner_Id(BookingStatus.WAITING, userId);
-        } else if (state.equals("REJECTED")) {
-            bookings = bookingRepository.findAllByStatusAndItem_Owner_Id(BookingStatus.REJECTED, userId);
-        } else if (state.equals("CURRENT")) {
-            bookings = bookingRepository.findAllByItem_Owner_IdAndStartBeforeAndEndAfter(userId, LocalDateTime.now(), LocalDateTime.now());
-        } else if (state.equals("PAST")) {
-            bookings = bookingRepository.findAllByItem_Owner_IdAndEndBeforeOrderByStartDesc(userId, LocalDateTime.now());
+        switch (status) {
+            case ALL:
+                bookings.addAll(bookingRepository.findAllByItem_Owner_Id_OrderByStartDesc(userId));
+                break;
+            case FUTURE:
+                bookings.addAll(bookingRepository.findAllByItem_Owner_IdAndStartAfterOrderByStartDesc(userId, LocalDateTime.now()));
+                break;
+            case WAITING:
+                bookings = bookingRepository.findAllByStatusAndItem_Owner_Id(BookingStatus.WAITING, userId);
+                break;
+            case REJECTED:
+                bookings = bookingRepository.findAllByStatusAndItem_Owner_Id(BookingStatus.REJECTED, userId);
+                break;
+            case CURRENT:
+                bookings = bookingRepository.findAllByItem_Owner_IdAndStartBeforeAndEndAfter(userId, LocalDateTime.now(), LocalDateTime.now());
+                break;
+            case PAST:
+                bookings = bookingRepository.findAllByItem_Owner_IdAndEndBeforeOrderByStartDesc(userId, LocalDateTime.now());
+                break;
         }
 
         return bookings;

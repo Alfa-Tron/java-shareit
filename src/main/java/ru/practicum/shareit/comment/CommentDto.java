@@ -1,25 +1,16 @@
 package ru.practicum.shareit.comment;
 
-import ru.practicum.shareit.item.Marker;
-import ru.practicum.shareit.item.model.Item;
-
-import javax.validation.constraints.NotEmpty;
-
 public class CommentDto {
     private Long id;
-    @NotEmpty(groups = Marker.OnCreate.class)
     private String text;
-
-    private Item item;
 
     private String authorName;
 
     private String created;
 
-    public CommentDto(Long id, String text, Item item, String author, String now) {
+    public CommentDto(Long id, String text, String author, String now) {
         this.id = id;
         this.text = text;
-        this.item = item;
         this.authorName = author;
         created = now;
     }
@@ -32,13 +23,6 @@ public class CommentDto {
         this.text = text;
     }
 
-    public Item getItem() {
-        return item;
-    }
-
-    public void setItem(Item item) {
-        this.item = item;
-    }
 
     public String getAuthorName() {
         return authorName;

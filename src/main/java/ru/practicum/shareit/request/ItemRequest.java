@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import ru.practicum.shareit.user.User;
 
 import javax.persistence.*;
-//что то не понял зачем нам этот класс)))
+
 @Entity
 @Table(name = "requests")
 @NoArgsConstructor

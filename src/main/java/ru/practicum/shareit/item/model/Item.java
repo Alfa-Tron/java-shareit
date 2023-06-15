@@ -35,6 +35,12 @@ public class Item {
         this.available = available;
     }
 
+    public Item(String name, String description, Boolean available) {
+        this.name = name;
+        this.description = description;
+        this.available = available;
+    }
+
     public long getId() {
         return id;
     }
