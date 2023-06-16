@@ -11,6 +11,6 @@ import javax.validation.constraints.Size;
 @Setter
 public class CommentDtoIn {
     @NotBlank(groups = Marker.OnCreate.class)
-    @Size(max = 50)
+    @Size(max = 50, groups = Marker.OnCreate.class)
     private String text;
 }

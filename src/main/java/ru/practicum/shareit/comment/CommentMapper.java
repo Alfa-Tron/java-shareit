@@ -6,9 +6,9 @@ import java.util.List;
 
 @Mapper
 public interface CommentMapper {
-    CommentDto CommentToDto(Comment comment);
+    CommentDto commentToDto(Comment comment);
 
-    Comment CommentDtoInToComment(CommentDtoIn comment);
+    Comment commentDtoInToComment(CommentDtoIn comment);
 
-    List<CommentDto> CommentListToDTos(List<Comment> comments);
+    List<CommentDto> commentListToDTos(List<Comment> comments);
 }

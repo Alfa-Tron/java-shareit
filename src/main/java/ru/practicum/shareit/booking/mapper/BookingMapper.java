@@ -10,9 +10,9 @@ import java.util.List;
 
 @Mapper
 public interface BookingMapper {
-    Booking BookingDtoInToBooking(BookingDtoIn bookingDto);
+    Booking bookingDtoInToBooking(BookingDtoIn bookingDto);
 
-    BookingDto BookingToBookingDto(Booking booking);
+    BookingDto bookingToBookingDto(Booking booking);
 
-    List<BookingDto> BookingListToBookingDtoList(List<Booking> bookingList);
+    List<BookingDto> bookingListToBookingDtoList(List<Booking> bookingList);
 }

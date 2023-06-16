@@ -21,6 +21,7 @@ import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.jpa.UserRepository;
 
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -45,15 +46,16 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto createItem(long userId, Item item) {
         User user = repositoryUser.findById(userId).orElseThrow(() -> new NotFoundException("user not found"));
         item.setOwner(user);
-        return itemMapper.ItemToItemDto(repositoryItem.save(item));
+        return itemMapper.itemToItemDto(repositoryItem.save(item));
     }
 
     @Override
     public ItemDto getItemById(long id, long userId) {
         Item item = repositoryItem.findById(id).orElseThrow(() -> new NotFoundException("item not found"));
         List<Comment> comments = commentRepository.findByItemOrderByCreatedDesc(item);
-        Optional<Booking> lastBookings = bookingRepository.findFirstByItemAndItem_Owner_IdAndStartBeforeOrderByStartDesc(item, userId, LocalDateTime.now());
-        Optional<Booking> nextBookings = bookingRepository.findFirstByItemAndItem_Owner_IdAndStartAfterOrderByStartAsc(item, userId, LocalDateTime.now());
+        LocalDateTime now = LocalDateTime.now();
+        Optional<Booking> lastBookings = bookingRepository.findFirstByItemAndItem_Owner_IdAndStartLessThanEqualOrderByStartDesc(item, userId, now);
+        Optional<Booking> nextBookings = bookingRepository.findFirstByItemAndItem_Owner_IdAndStartAfterOrderByStartAsc(item, userId, now);
         ItemDto i = new ItemDto(item.getId(), item.getName(), item.getDescription(), item.isAvailable());
 
         if (lastBookings.isPresent()) {
@@ -68,7 +70,7 @@ public class ItemServiceImpl implements ItemService {
                 i.setNextBooking(new ItemDto.BookingItemsDto(next.getId(), next.getBooker().getId()));
             }
         }
-        if (comments != null) i.setComments(commentMapper.CommentListToDTos(comments));
+        if (comments != null) i.setComments(commentMapper.commentListToDTos(comments));
 
         return i;
     }
@@ -77,13 +79,15 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemDto> getAllItems(long userId) {
         List<Item> items = repositoryItem.findByOwnerId(userId);
         List<ItemDto> itemsDto = new ArrayList<>();
+        LocalDateTime now = LocalDateTime.now();
         Map<Item, List<Comment>> comments = commentRepository.findByItemIn(items, Sort.by(DESC, "created"))
                 .stream()
                 .collect(groupingBy(Comment::getItem, toList()));
-        Map<Item, List<Booking>> lastBookings = bookingRepository.findFirstByItemInAndStartBeforeOrderByStartDesc(items, LocalDateTime.now())
+        Map<Item, List<Booking>> lastBookings = bookingRepository.findByItemInAndStartLessThanEqualOrderByStartDesc(items, now)
                 .stream()
                 .collect(groupingBy(Booking::getItem, toList()));
-        Map<Item, List<Booking>> nextBookings = bookingRepository.findFirstByItemInAndStartAfterOrderByStartAsc(items, LocalDateTime.now())
+        //убрал first. поидее нам же только первый элемент нужен, не смог додуматься как его запросом только 1 достать для вещи,а не все подходящие
+        Map<Item, List<Booking>> nextBookings = bookingRepository.findByItemInAndStartAfterOrderByStartAsc(items, now)
                 .stream()
                 .collect(groupingBy(Booking::getItem, toList()));
 
@@ -103,7 +107,7 @@ public class ItemServiceImpl implements ItemService {
                     }
                 }
             }
-            if (value != null) i.setComments(commentMapper.CommentListToDTos(value));
+            if (value != null) i.setComments(commentMapper.commentListToDTos(value));
 
             itemsDto.add(i);
         }
@@ -115,7 +119,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public List<ItemDto> getSearchItems(String searchText) {
         if (searchText.isBlank()) return Collections.emptyList();
-        return itemMapper.ListToDtoList(repositoryItem.findAllByNameOrDescription(searchText.toLowerCase()));
+        return itemMapper.listToDtoList(repositoryItem.findAllByNameOrDescription(searchText.toLowerCase()));
 
     }
 
@@ -125,18 +129,17 @@ public class ItemServiceImpl implements ItemService {
         updatedItem.setId(id);
         Item item = repositoryItem.findById(updatedItem.getId()).orElseThrow(() -> new NotFoundException("item not found"));
         User user = repositoryUser.findById(userId).orElseThrow(() -> new NotFoundException("user not found"));
-        ;
 
         if (item.getOwner().equals(user)) {
+            throw new IllegalArgumentException("not rights");
+        }
 
-            if (updatedItem.getDescription() != null && !updatedItem.getDescription().isBlank())
-                item.setDescription(updatedItem.getDescription());
-            if (updatedItem.getName() != null && !updatedItem.getName().isBlank())
-                item.setName(updatedItem.getName());
-            if (updatedItem.isAvailable() != null) item.setAvailable(updatedItem.isAvailable());
-            return itemMapper.ItemToItemDto(item);
-        } else throw new IllegalArgumentException("net prav");
-
+        if (updatedItem.getDescription() != null && !updatedItem.getDescription().isBlank())
+            item.setDescription(updatedItem.getDescription());
+        if (updatedItem.getName() != null && !updatedItem.getName().isBlank())
+            item.setName(updatedItem.getName());
+        if (updatedItem.isAvailable() != null) item.setAvailable(updatedItem.isAvailable());
+        return itemMapper.itemToItemDto(item);
     }
 
     @Override
@@ -148,19 +151,18 @@ public class ItemServiceImpl implements ItemService {
     public CommentDto addComment(Long itemId, long userId, Comment text) {
         Item item = repositoryItem.findById(itemId).orElseThrow(() -> new NotFoundException("item not found"));
         User user = repositoryUser.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
-        Boolean userHasBooking = bookingRepository.existsByBooker_IdAndItem_IdAndStatusAndStartBefore(userId, itemId, BookingStatus.APPROVED,LocalDateTime.now());
-        //тут проверка что нельзя комментарий оставить на заказ который еще не сделан
+        Boolean userHasBooking = bookingRepository.existsByBooker_IdAndItem_IdAndStatusAndStartBefore(userId, itemId, BookingStatus.APPROVED, LocalDateTime.now());
+
         if (!userHasBooking) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User did not rent the item");
-        }
-        else {
+        } else {
             text.setItem(item);
             text.setAuthorName(user);
             text.setCreated(LocalDateTime.now());
             commentRepository.save(text);
         }
 
-        return commentMapper.CommentToDto(text);
+        return commentMapper.commentToDto(text);
     }
 
 }

@@ -10,9 +10,9 @@ import java.util.List;
 
 @Mapper
 public interface ItemMapper {
-    Item ItemDtoInToItem(ItemDtoIn itemDto);
+    Item itemDtoInToItem(ItemDtoIn itemDto);
 
-    ItemDto ItemToItemDto(Item item);
+    ItemDto itemToItemDto(Item item);
 
-    List<ItemDto> ListToDtoList(List<Item> items);
+    List<ItemDto> listToDtoList(List<Item> items);
 }

@@ -23,7 +23,7 @@ public class ItemController {
 
     @PostMapping
     public ItemDto createItem(@RequestHeader("X-Sharer-User-Id") long userId, @Validated({Marker.OnCreate.class}) @RequestBody ItemDtoIn item) {
-        return itemService.createItem(userId, itemMapper.ItemDtoInToItem(item));
+        return itemService.createItem(userId, itemMapper.itemDtoInToItem(item));
     }
 
     @GetMapping("/{id}")
@@ -45,12 +45,12 @@ public class ItemController {
 
     @PostMapping("/{itemId}/comment")
     public CommentDto addComment(@PathVariable Long itemId, @RequestHeader("X-Sharer-User-Id") long userId, @Validated({Marker.OnCreate.class}) @RequestBody CommentDtoIn comment) {
-        return itemService.addComment(itemId, userId, commentMapper.CommentDtoInToComment(comment));
+        return itemService.addComment(itemId, userId, commentMapper.commentDtoInToComment(comment));
     }
 
     @PatchMapping("/{id}")
     public ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") long userId, @PathVariable("id") long id, @Validated({Marker.OnUpdate.class}) @RequestBody ItemDtoIn updatedItem) {
-        return itemService.updateItem(userId, id, itemMapper.ItemDtoInToItem(updatedItem));
+        return itemService.updateItem(userId, id, itemMapper.itemDtoInToItem(updatedItem));
 
     }
 

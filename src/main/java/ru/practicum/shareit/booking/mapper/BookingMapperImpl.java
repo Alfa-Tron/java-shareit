@@ -12,20 +12,20 @@ import java.util.List;
 public class BookingMapperImpl implements BookingMapper {
 
     @Override
-    public Booking BookingDtoInToBooking(BookingDtoIn bookingDto) {
+    public Booking bookingDtoInToBooking(BookingDtoIn bookingDto) {
         return new Booking(bookingDto.getStart(), bookingDto.getEnd());
     }
 
     @Override
-    public BookingDto BookingToBookingDto(Booking booking) {
-        return new BookingDto(booking.getId(), booking.getStart().toString(), booking.getEnd().toString(), booking.getStatus().toString(), booking.getBooker().getId(), booking.getItem().getId(), booking.getItem().getName());
+    public BookingDto bookingToBookingDto(Booking booking) {
+        return new BookingDto(booking.getId(), booking.getStart(), booking.getEnd(), booking.getStatus().toString(), booking.getBooker().getId(), booking.getItem().getId(), booking.getItem().getName());
     }
 
     @Override
-    public List<BookingDto> BookingListToBookingDtoList(List<Booking> bookingList) {
+    public List<BookingDto> bookingListToBookingDtoList(List<Booking> bookingList) {
         List<BookingDto> list = new ArrayList<>();
         for (Booking l : bookingList) {
-            list.add(BookingToBookingDto(l));
+            list.add(bookingToBookingDto(l));
         }
         return list;
     }

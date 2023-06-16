@@ -13,10 +13,10 @@ import javax.validation.constraints.Size;
 @Setter
 public class ItemDtoIn {
     @NotBlank(groups = Marker.OnCreate.class)
-    @Size(max = 50)
+    @Size(max = 50, groups = {Marker.OnCreate.class, Marker.OnUpdate.class})
     private String name;
     @NotEmpty(groups = Marker.OnCreate.class)
-    @Size(max = 50)
+    @Size(max = 50, groups = {Marker.OnCreate.class, Marker.OnUpdate.class})
     private String description;
     @NotNull(groups = Marker.OnCreate.class)
     private Boolean available;

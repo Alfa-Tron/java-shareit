@@ -11,19 +11,19 @@ import java.util.stream.Collectors;
 @Component
 public class ItemMapperImpl implements ItemMapper {
     @Override
-    public Item ItemDtoInToItem(ItemDtoIn itemDto) {
+    public Item itemDtoInToItem(ItemDtoIn itemDto) {
         return new Item( itemDto.getName(), itemDto.getDescription(), itemDto.getAvailable());
     }
 
     @Override
-    public ItemDto ItemToItemDto(Item item) {
+    public ItemDto itemToItemDto(Item item) {
         return new ItemDto(item.getId(), item.getName(), item.getDescription(), item.isAvailable());
     }
 
     @Override
-    public List<ItemDto> ListToDtoList(List<Item> items) {
+    public List<ItemDto> listToDtoList(List<Item> items) {
         return items.stream()
-                .map(this::ItemToItemDto)
+                .map(this::itemToItemDto)
                 .collect(Collectors.toList());
     }
 }
