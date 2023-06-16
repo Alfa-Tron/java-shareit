@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
 @RestControllerAdvice
@@ -20,8 +21,16 @@ public class ExceptionApiHandler {
                 .body(new ErrorMessage(exception.getMessage()));
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler({MethodArgumentNotValidException.class})
     public ResponseEntity<ErrorMessage> handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+        log.debug("Получен статус 400 Bad request {}", exception.getStackTrace(), exception);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorMessage(exception.getMessage()));
+    }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<ErrorMessage> ResponseStatusException(ResponseStatusException exception) {
         log.debug("Получен статус 400 Bad request {}", exception.getStackTrace(), exception);
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)

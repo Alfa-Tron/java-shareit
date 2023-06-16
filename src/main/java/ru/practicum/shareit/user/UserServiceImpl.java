@@ -1,49 +1,53 @@
 package ru.practicum.shareit.user;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.exeption.NotFoundException;
+import ru.practicum.shareit.user.jpa.UserRepository;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
-
-    private final RepositoryUser repositoryUserMemory;
-
-    public UserServiceImpl(RepositoryUser repositoryUserMemory) {
-        this.repositoryUserMemory = repositoryUserMemory;
-    }
-
-
+    private final UserRepository repositoryUser;
+    @Transactional
     public User createUser(User user) {
-        return repositoryUserMemory.createUser(user);
+        return repositoryUser.save(user);
     }
 
     @Override
     public List<User> getAllUsers() {
-        return repositoryUserMemory.getAllUsers();
-    }
-
-    public Map<Long, User> getAllUsersMap() {
-        return repositoryUserMemory.getAllUsersMap();
+        return repositoryUser.findAll();
     }
 
     @Override
     public User getUserById(long id) {
-        return repositoryUserMemory.getUserById(id);
+        return repositoryUser.findById(id).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
     }
 
     @Override
+    @Transactional
     public User updateUser(User user) {
+        User currentUser = repositoryUser.findById(user.getId()).orElseThrow(() -> new NotFoundException("User not found"));
 
-        return repositoryUserMemory.updateUser(user);
+        if (user.getName() != null && !user.getName().isBlank()) {
+            currentUser.setName(user.getName());
+        }
+
+        if (user.getEmail() != null && !user.getEmail().isEmpty()) {
+            currentUser.setEmail(user.getEmail());
+        }
+        return currentUser;
+
     }
 
     @Override
+    @Transactional
     public void deleteUser(long id) {
-         repositoryUserMemory.deleteUser(id);
+        repositoryUser.deleteById(id);
     }
-
-
 }

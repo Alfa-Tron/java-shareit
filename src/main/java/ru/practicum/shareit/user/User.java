@@ -1,11 +1,21 @@
 package ru.practicum.shareit.user;
 
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "users")
+@NoArgsConstructor
+@EnableJpaRepositories(basePackages = "ru.practicum")
+@EqualsAndHashCode
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
     private String name;
-
     private String email;
 
     public User(long id, String name, String email) {

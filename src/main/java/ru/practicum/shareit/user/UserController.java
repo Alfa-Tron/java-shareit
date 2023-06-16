@@ -1,27 +1,23 @@
 package ru.practicum.shareit.user;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.Marker;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.mapper.UserMapper;
 
-import javax.validation.Validator;
 import java.util.List;
 
 
 @RestController
 @RequestMapping(path = "/users")
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserMapper userMapper;
 
     private final UserService userService;
-
-    public UserController(UserService userService, UserMapper userMapper) {
-        this.userService = userService;
-        this.userMapper = userMapper;
-    }
 
     @PostMapping
     public UserDto createUser(@Validated({Marker.OnCreate.class}) @RequestBody UserDto userDTO) {

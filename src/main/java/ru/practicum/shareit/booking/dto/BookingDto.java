@@ -1,76 +1,58 @@
 package ru.practicum.shareit.booking.dto;
 
-import ru.practicum.shareit.booking.Status;
-import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.User;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-/**
- * TODO Sprint add-bookings.
- */
+@Getter
+@Setter
 public class BookingDto {
-    private long id;
-    private LocalDateTime start;
-    private LocalDateTime end;
-    private Item item;
-    private User booker;
-    private Status status;
+    private final Long id;
+    private final LocalDateTime start;
+    private final LocalDateTime end;
+    private final ItemDtoBooking item;
+    private final BookerDto booker;
+    private final String status;
 
-    public BookingDto(long id, LocalDateTime start, LocalDateTime end, Item item, User booker, Status status) {
+
+    public BookingDto(Long id, LocalDateTime start, LocalDateTime end, String status, long bookerId, long itemId, String itemName) {
         this.id = id;
         this.start = start;
         this.end = end;
-        this.item = item;
-        this.booker = booker;
         this.status = status;
+        booker = new BookerDto(bookerId);
+        item = new ItemDtoBooking(itemId, itemName);
+
     }
 
-    public long getId() {
-        return id;
+    @Getter
+    @Setter
+    public static class BookerDto {
+        private long id;
+
+        public BookerDto(long id) {
+            this.id = id;
+        }
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
+    @Getter
+    @Setter
+    public static class ItemDtoBooking {
+        private final long id;
+        private final String name;
 
-    public LocalDateTime getStart() {
-        return start;
-    }
+        public ItemDtoBooking(long id, String name) {
+            this.id = id;
+            this.name = name;
+        }
 
-    public void setStart(LocalDateTime start) {
-        this.start = start;
     }
-
-    public LocalDateTime getEnd() {
-        return end;
-    }
-
-    public void setEnd(LocalDateTime end) {
-        this.end = end;
-    }
-
-    public Item getItem() {
-        return item;
-    }
-
-    public void setItem(Item item) {
-        this.item = item;
-    }
-
-    public User getBooker() {
-        return booker;
-    }
-
-    public void setBooker(User booker) {
-        this.booker = booker;
-    }
-
-    public Status getStatus() {
+    public String getStatus() {
+        if (status == null) {
+            return "WAITING";
+        }
         return status;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
-    }
 }
