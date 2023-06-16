@@ -130,7 +130,7 @@ public class ItemServiceImpl implements ItemService {
         Item item = repositoryItem.findById(updatedItem.getId()).orElseThrow(() -> new NotFoundException("item not found"));
         User user = repositoryUser.findById(userId).orElseThrow(() -> new NotFoundException("user not found"));
 
-        if (item.getOwner().equals(user)) {
+        if (!item.getOwner().equals(user)) {
             throw new IllegalArgumentException("not rights");
         }
 
