@@ -35,10 +35,23 @@ public class Item {
         this.available = available;
     }
 
+    public Item(String name, String description, Boolean available, long rId) {
+        this.name = name;
+        this.description = description;
+        this.available = available;
+        this.request = new ItemRequest();
+        this.request.setId(rId);
+    }
+
     public Item(String name, String description, Boolean available) {
         this.name = name;
         this.description = description;
         this.available = available;
+    }
+
+    public Item(String s, String s1) {
+        this.name = s;
+        this.description = s1;
     }
 
     public long getId() {

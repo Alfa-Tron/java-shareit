@@ -20,11 +20,9 @@ public class ItemDtoIn {
     private String description;
     @NotNull(groups = Marker.OnCreate.class)
     private Boolean available;
+    private long requestId;
 
+    public ItemDtoIn() {
 
-    public ItemDtoIn(String name, String description, Boolean available) {
-        this.name = name;
-        this.description = description;
-        this.available = available;
     }
 }

@@ -22,4 +22,7 @@ public class CommentDto {
         created = now;
     }
 
+    public CommentDto() {
+
+    }
 }

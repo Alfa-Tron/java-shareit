@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS requests
     id           BIGINT IDENTITY PRIMARY KEY not null,
     description  VARCHAR(1024)               NOT NULL,
     requestor_id BIGINT                      not null,
+    created TIMESTAMP WITHOUT TIME ZONE not null,
     FOREIGN KEY (requestor_id) REFERENCES users (id)
 );
 
@@ -30,7 +31,7 @@ CREATE TABLE IF NOT EXISTS items
     owner_id     BIGINT                      not null,
     FOREIGN KEY (owner_id) REFERENCES users (id),
     request_id   BIGINT,
-    FOREIGN KEY (request_id) REFERENCES request (id)
+    FOREIGN KEY (request_id) REFERENCES requests (id)
 );
 
 

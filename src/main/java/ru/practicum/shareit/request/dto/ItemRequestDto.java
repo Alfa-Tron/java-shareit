@@ -1,21 +1,68 @@
 package ru.practicum.shareit.request.dto;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.practicum.shareit.user.User;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 
 public class ItemRequestDto {
     private long id;
     private String description;
-    private User requestor;
+    private Requester requestor;
     private LocalDateTime created;
+    private List<Items> items = new ArrayList<>();
 
     public ItemRequestDto(long id, String description, User requestor, LocalDateTime created) {
         this.id = id;
         this.description = description;
-        this.requestor = requestor;
+        this.requestor = new Requester(requestor.getId());
         this.created = created;
+    }
+
+    public ItemRequestDto() {
+        items = Collections.emptyList();
+    }
+
+
+    public List<Items> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Items> items) {
+        this.items = items;
+    }
+
+    @Setter
+    @Getter
+    public static class Items {
+        private long id;
+        private String name;
+        private String description;
+        private boolean available;
+        private long requestId;
+    }
+
+    public Requester getRequestor() {
+        return requestor;
+    }
+
+    @Getter
+    @Setter
+    static class Requester {
+        private long id;
+
+        public Requester(long id) {
+            this.id = id;
+        }
+
+        public long getId() {
+            return id;
+        }
     }
 
     public long getId() {
@@ -34,20 +81,9 @@ public class ItemRequestDto {
         this.description = description;
     }
 
-    public User getRequestor() {
-        return requestor;
-    }
-
-    public void setRequestor(User requestor) {
-        this.requestor = requestor;
-    }
-
     public LocalDateTime getCreated() {
         return created;
     }
-
-    public void setCreated(LocalDateTime created) {
-        this.created = created;
-    }
 }
+
 

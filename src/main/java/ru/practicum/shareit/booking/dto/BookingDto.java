@@ -48,6 +48,7 @@ public class BookingDto {
         }
 
     }
+
     public String getStatus() {
         if (status == null) {
             return "WAITING";

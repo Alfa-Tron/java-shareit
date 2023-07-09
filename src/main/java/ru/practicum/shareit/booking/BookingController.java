@@ -3,6 +3,7 @@ package ru.practicum.shareit.booking;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.ValidationUtils;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoIn;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
@@ -35,13 +36,15 @@ public class BookingController {
     }
 
     @GetMapping
-    public List<BookingDto> getAllBookings(@RequestHeader("X-Sharer-User-Id") long userId, @RequestParam( defaultValue = "ALL") String state) {
-        return bookingMapper.bookingListToBookingDtoList(bookingService.getAllBookings(userId, state));
+    public List<BookingDto> getAllBookings(@RequestHeader("X-Sharer-User-Id") long userId, @RequestParam(defaultValue = "ALL") String state, @RequestParam(value = "from", required = false) Integer from, @RequestParam(value = "size", required = false) Integer size) {
+        ValidationUtils.validatePaginationParameters(from, size);
+        return bookingMapper.bookingListToBookingDtoList(bookingService.getAllBookings(userId, state, from, size));
     }
 
     @GetMapping("/owner")
-    public List<BookingDto> getBookingOwner(@RequestHeader("X-Sharer-User-Id") long userId, @RequestParam( defaultValue = "ALL") String state) {
-        return bookingMapper.bookingListToBookingDtoList(bookingService.getBookingOwner(userId, state));
+    public List<BookingDto> getBookingOwner(@RequestHeader("X-Sharer-User-Id") long userId, @RequestParam(defaultValue = "ALL") String state, @RequestParam(value = "from", required = false) Integer from, @RequestParam(value = "size", required = false) Integer size) {
+        ValidationUtils.validatePaginationParameters(from, size);
+        return bookingMapper.bookingListToBookingDtoList(bookingService.getBookingOwner(userId, state, from, size));
     }
 
 }
