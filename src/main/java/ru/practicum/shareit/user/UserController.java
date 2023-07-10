@@ -43,7 +43,7 @@ public class UserController {
     public UserDto updateUser(@PathVariable("id") long id, @Validated({Marker.OnUpdate.class}) @RequestBody UserDto userDto) {
         userDto.setId(id);
         User createdUser = userService.updateUser(userMapper.userDtoToUser(userDto));
-        log.info("updateUser Id: {}, userDto: {}", id, userDto);
+        log.info("updateUser Id: {}, userDTo: {}", id, userDto);
         return userMapper.userToUserDto(createdUser);
     }
 
