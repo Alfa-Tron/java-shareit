@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import ru.practicum.shareit.CustomPageRequest;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.BookingStatus;
@@ -19,8 +21,6 @@ import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.jpa.UserRepository;
-
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -53,10 +53,10 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto getItemById(long id, long userId) {
         Item item = repositoryItem.findById(id).orElseThrow(() -> new NotFoundException("item not found"));
         List<Comment> comments = commentRepository.findByItemOrderByCreatedDesc(item);
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now().withNano(0);
         Optional<Booking> lastBookings = bookingRepository.findFirstByItemAndItem_Owner_IdAndStartLessThanEqualOrderByStartDesc(item, userId, now);
         Optional<Booking> nextBookings = bookingRepository.findFirstByItemAndItem_Owner_IdAndStartAfterOrderByStartAsc(item, userId, now);
-        ItemDto i = new ItemDto(item.getId(), item.getName(), item.getDescription(), item.isAvailable());
+        ItemDto i = new ItemDto(item.getId(), item.getName(), item.getDescription(), item.getAvailable());
 
         if (lastBookings.isPresent()) {
             Booking last = lastBookings.get();
@@ -64,7 +64,7 @@ public class ItemServiceImpl implements ItemService {
         }
 
         if (nextBookings.isPresent()) {
-            if (lastBookings.isPresent() && lastBookings.get().getId().longValue() != nextBookings.get().getId().longValue()) {
+            if (lastBookings.isPresent() && lastBookings.get().getId() != nextBookings.get().getId()) {
                 Booking next = nextBookings.get();
 
                 i.setNextBooking(new ItemDto.BookingItemsDto(next.getId(), next.getBooker().getId()));
@@ -76,17 +76,21 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> getAllItems(long userId) {
-        List<Item> items = repositoryItem.findByOwnerId(userId);
+    public List<ItemDto> getAllItems(long userId, Integer from, Integer size) {
+        if (from == null && size == null) {
+            from = 0;
+            size = 99;
+        }
+        CustomPageRequest pageRequest = new CustomPageRequest(from, size);
+        List<Item> items = repositoryItem.findByOwnerId(userId, pageRequest).getContent();
         List<ItemDto> itemsDto = new ArrayList<>();
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now().withNano(0);
         Map<Item, List<Comment>> comments = commentRepository.findByItemIn(items, Sort.by(DESC, "created"))
                 .stream()
                 .collect(groupingBy(Comment::getItem, toList()));
         Map<Item, List<Booking>> lastBookings = bookingRepository.findByItemInAndStartLessThanEqualOrderByStartDesc(items, now)
                 .stream()
                 .collect(groupingBy(Booking::getItem, toList()));
-        //убрал first. поидее нам же только первый элемент нужен, не смог додуматься как его запросом только 1 достать для вещи,а не все подходящие
         Map<Item, List<Booking>> nextBookings = bookingRepository.findByItemInAndStartAfterOrderByStartAsc(items, now)
                 .stream()
                 .collect(groupingBy(Booking::getItem, toList()));
@@ -94,12 +98,12 @@ public class ItemServiceImpl implements ItemService {
         for (Item entry : items) {
             List<Comment> value = comments.get(entry);
 
-            ItemDto i = new ItemDto(entry.getId(), entry.getName(), entry.getDescription(), entry.isAvailable());
+            ItemDto i = new ItemDto(entry.getId(), entry.getName(), entry.getDescription(), entry.getAvailable());
             if (!lastBookings.isEmpty() && !nextBookings.isEmpty()) {
                 if (lastBookings.containsKey(entry) && nextBookings.containsKey(entry)) {
                     Booking last = lastBookings.get(entry).get(0);
                     Booking next = nextBookings.get(entry).get(0);
-                    if (last.getId().longValue() == next.getId().longValue()) {
+                    if (last.getId() == next.getId()) {
                         i.setLastBooking(new ItemDto.BookingItemsDto(last.getId(), last.getBooker().getId()));
                     } else {
                         i.setLastBooking(new ItemDto.BookingItemsDto(last.getId(), last.getBooker().getId()));
@@ -117,9 +121,15 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> getSearchItems(String searchText) {
+    public List<ItemDto> getSearchItems(String searchText, Integer from, Integer size) {
         if (searchText.isBlank()) return Collections.emptyList();
-        return itemMapper.listToDtoList(repositoryItem.findAllByNameOrDescription(searchText.toLowerCase()));
+        if (from == null && size == null) {
+            from = 0;
+            size = 99;
+        }
+        CustomPageRequest pageRequest = new CustomPageRequest(from, size);
+
+        return itemMapper.listToDtoList(repositoryItem.findAllByNameOrDescription(searchText.toLowerCase(), pageRequest).getContent());
 
     }
 
@@ -138,7 +148,7 @@ public class ItemServiceImpl implements ItemService {
             item.setDescription(updatedItem.getDescription());
         if (updatedItem.getName() != null && !updatedItem.getName().isBlank())
             item.setName(updatedItem.getName());
-        if (updatedItem.isAvailable() != null) item.setAvailable(updatedItem.isAvailable());
+        if (updatedItem.getAvailable() != null) item.setAvailable(updatedItem.getAvailable());
         return itemMapper.itemToItemDto(item);
     }
 

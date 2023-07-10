@@ -1,12 +1,14 @@
 package ru.practicum.shareit.comment;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class CommentDto {
     private Long id;
     private String text;
@@ -21,5 +23,4 @@ public class CommentDto {
         this.authorName = author;
         created = now;
     }
-
 }

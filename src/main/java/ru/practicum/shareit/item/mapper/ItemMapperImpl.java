@@ -12,12 +12,17 @@ import java.util.stream.Collectors;
 public class ItemMapperImpl implements ItemMapper {
     @Override
     public Item itemDtoInToItem(ItemDtoIn itemDto) {
-        return new Item( itemDto.getName(), itemDto.getDescription(), itemDto.getAvailable());
+        if (itemDto.getRequestId() == 0)
+            return new Item(itemDto.getName(), itemDto.getDescription(), itemDto.getAvailable());
+        return new Item(itemDto.getName(), itemDto.getDescription(), itemDto.getAvailable(), itemDto.getRequestId());
     }
 
     @Override
     public ItemDto itemToItemDto(Item item) {
-        return new ItemDto(item.getId(), item.getName(), item.getDescription(), item.isAvailable());
+        if (item.getRequest() == null)
+            return new ItemDto(item.getId(), item.getName(), item.getDescription(), item.getAvailable());
+
+        return new ItemDto(item.getId(), item.getName(), item.getDescription(), item.getAvailable(), item.getRequest().getId());
     }
 
     @Override
