@@ -1,7 +1,6 @@
 package ru.practicum.shareit.booking;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -108,7 +107,7 @@ public class BookingServiceImpl implements BookingService {
             from = 0;
             size = 10;
         }
-        CustomPageRequest pageRequest = new CustomPageRequest(from,size);
+        CustomPageRequest pageRequest = new CustomPageRequest(from, size);
 
         switch (status) {
             case ALL:
@@ -146,7 +145,7 @@ public class BookingServiceImpl implements BookingService {
             from = 0;
             size = 10;
         }
-        CustomPageRequest pageRequest = new CustomPageRequest(from,size);
+        CustomPageRequest pageRequest = new CustomPageRequest(from, size);
 
         switch (status) {
             case ALL:

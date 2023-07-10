@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 @Getter
 @Setter
 public class ItemRequestDto {
@@ -27,6 +28,7 @@ public class ItemRequestDto {
     public ItemRequestDto() {
         items = Collections.emptyList();
     }
+
     @Setter
     @Getter
     public static class Items {
@@ -36,6 +38,7 @@ public class ItemRequestDto {
         private boolean available;
         private long requestId;
     }
+
     @Getter
     @Setter
     static class Requester {

@@ -1,6 +1,5 @@
 package ru.practicum.shareit.booking.dto;
 
-import jdk.jshell.Snippet;
 import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.shareit.booking.BookingStatus;

@@ -23,7 +23,7 @@ public class UserController {
 
     @PostMapping
     public UserDto createUser(@Validated({Marker.OnCreate.class}) @RequestBody UserDto userDTO) {
-        log.info("createUser userDto: {}",userDTO);
+        log.info("createUser userDto: {}", userDTO);
         return userMapper.userToUserDto(userService.createUser(userMapper.userDtoToUser(userDTO)));
     }
 
@@ -35,7 +35,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public UserDto getUserById(@PathVariable("id") long id) {
-        log.info("getUserById Id: {}",id);
+        log.info("getUserById Id: {}", id);
         return userMapper.userToUserDto(userService.getUserById(id));
     }
 
@@ -43,13 +43,13 @@ public class UserController {
     public UserDto updateUser(@PathVariable("id") long id, @Validated({Marker.OnUpdate.class}) @RequestBody UserDto userDto) {
         userDto.setId(id);
         User createdUser = userService.updateUser(userMapper.userDtoToUser(userDto));
-        log.info("updateUser Id: {}, userDto: {}",id,userDto);
+        log.info("updateUser Id: {}, userDto: {}", id, userDto);
         return userMapper.userToUserDto(createdUser);
     }
 
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable("id") long id) {
-        log.info("deleteUser id: {},userId,from,size",id);
+        log.info("deleteUser id: {},userId,from,size", id);
         userService.deleteUser(id);
     }
 }

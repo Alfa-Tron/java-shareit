@@ -28,25 +28,25 @@ public class ItemController {
 
     @PostMapping
     public ItemDto createItem(@RequestHeader("X-Sharer-User-Id") long userId, @Validated({Marker.OnCreate.class}) @RequestBody ItemDtoIn item) {
-        log.info("createItem userId: {}, item: {}",userId,item);
+        log.info("createItem userId: {}, item: {}", userId, item);
         return itemService.createItem(userId, itemMapper.itemDtoInToItem(item));
     }
 
     @GetMapping("/{id}")
     public ItemDto getItemById(@PathVariable("id") long id, @RequestHeader("X-Sharer-User-Id") long userId) {
-        log.info("getItemById id: {}, userId: {}",id,userId);
+        log.info("getItemById id: {}, userId: {}", id, userId);
         return itemService.getItemById(id, userId);
     }
 
     @GetMapping
-    public List<ItemDto> getItemByUser(@RequestHeader("X-Sharer-User-Id") long userId, @PositiveOrZero @RequestParam(value = "from", required = false) Integer from,@Positive @RequestParam(value = "size", required = false) Integer size) {
-        log.info("getItemByUser userId: {}, from: {}, size: {}",userId,from,size);
+    public List<ItemDto> getItemByUser(@RequestHeader("X-Sharer-User-Id") long userId, @PositiveOrZero @RequestParam(value = "from", required = false) Integer from, @Positive @RequestParam(value = "size", required = false) Integer size) {
+        log.info("getItemByUser userId: {}, from: {}, size: {}", userId, from, size);
         return itemService.getAllItems(userId, from, size);
     }
 
     @GetMapping("/search")
-    public List<ItemDto> searchItems(@RequestParam("text") String searchText,@PositiveOrZero @RequestParam(value = "from", required = false) Integer from,@Positive @RequestParam(value = "size", required = false) Integer size) {
-        log.info("searchItems searchText: {}, from: {}, size: {}",searchText,from,size);
+    public List<ItemDto> searchItems(@RequestParam("text") String searchText, @PositiveOrZero @RequestParam(value = "from", required = false) Integer from, @Positive @RequestParam(value = "size", required = false) Integer size) {
+        log.info("searchItems searchText: {}, from: {}, size: {}", searchText, from, size);
         return itemService.getSearchItems(searchText, from, size);
 
     }

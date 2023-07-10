@@ -1,7 +1,6 @@
 package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -82,7 +81,7 @@ public class ItemServiceImpl implements ItemService {
             from = 0;
             size = 99;
         }
-        CustomPageRequest pageRequest = new CustomPageRequest(from,size);
+        CustomPageRequest pageRequest = new CustomPageRequest(from, size);
         List<Item> items = repositoryItem.findByOwnerId(userId, pageRequest).getContent();
         List<ItemDto> itemsDto = new ArrayList<>();
         LocalDateTime now = LocalDateTime.now().withNano(0);
@@ -128,7 +127,7 @@ public class ItemServiceImpl implements ItemService {
             from = 0;
             size = 99;
         }
-        CustomPageRequest pageRequest = new CustomPageRequest(from,size);
+        CustomPageRequest pageRequest = new CustomPageRequest(from, size);
 
         return itemMapper.listToDtoList(repositoryItem.findAllByNameOrDescription(searchText.toLowerCase(), pageRequest).getContent());
 

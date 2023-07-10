@@ -2,7 +2,6 @@ package ru.practicum.shareit.request;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -81,7 +80,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
             return dtos;
         }
         Sort sort = Sort.by(Sort.Direction.DESC, "created");
-        CustomPageRequest pageRequest = new CustomPageRequest(from,size,sort);
+        CustomPageRequest pageRequest = new CustomPageRequest(from, size, sort);
         User currentUser = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
         Page<ItemRequest> itemRequestPage = requestRepository.findAllByRequestorNot(currentUser, pageRequest);
 

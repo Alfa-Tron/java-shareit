@@ -1,7 +1,6 @@
 package ru.practicum.shareit.request;
 
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,25 +24,25 @@ public class ItemRequestController {
 
     @PostMapping
     public ItemRequestDto createRequest(@RequestHeader("X-Sharer-User-Id") long userId, @Validated({Marker.OnCreate.class}) @RequestBody ItemRequestDtoIn requestDtoIn) {
-        log.info("CreateRequest userId: {}, RequestDtoIn: {}",userId,requestDtoIn);
+        log.info("CreateRequest userId: {}, RequestDtoIn: {}", userId, requestDtoIn);
         return requestMapper.requestToDto(itemRequestService.createRequest(userId, requestMapper.requestDtoInToRequest(requestDtoIn)));
     }
 
     @GetMapping
     public List<ItemRequestDto> getItemById(@RequestHeader("X-Sharer-User-Id") long userId) {
-        log.info("getItemById userId: {}",userId);
+        log.info("getItemById userId: {}", userId);
         return itemRequestService.getRequests(userId);
     }
 
     @GetMapping("/all")
     public List<ItemRequestDto> getAllRequests(@PositiveOrZero @RequestParam(value = "from", required = false) Integer from, @Positive @RequestParam(value = "size", required = false) Integer size, @RequestHeader("X-Sharer-User-Id") long userId) {
-        log.info("getAllRequests userId: {}, from: {}, size: {}",userId,from,size);
+        log.info("getAllRequests userId: {}, from: {}, size: {}", userId, from, size);
         return itemRequestService.getAllRequests(from, size, userId);
     }
 
     @GetMapping("/{id}")
     public ItemRequestDto getItemById(@PathVariable Long id, @RequestHeader("X-Sharer-User-Id") long userId) {
-        log.info("getItemById userId: {}",userId);
+        log.info("getItemById userId: {}", userId);
         return itemRequestService.getRequestOne(id, userId);
     }
 }

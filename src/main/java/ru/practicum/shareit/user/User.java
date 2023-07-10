@@ -25,6 +25,6 @@ public class User {
     }
 
     public User(long userId) {
-        this.id=userId;
+        this.id = userId;
     }
 }
