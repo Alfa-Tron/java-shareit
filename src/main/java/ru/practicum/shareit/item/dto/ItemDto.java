@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.dto;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.practicum.shareit.comment.CommentDto;
 
@@ -10,6 +11,7 @@ import java.util.Objects;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class ItemDto {
     private long id;
     private String name;
@@ -35,10 +37,6 @@ public class ItemDto {
         this.name = name;
         this.description = description;
         this.available = available;
-    }
-
-    public ItemDto() {
-
     }
 
     public ItemDto(String s, String s1) {

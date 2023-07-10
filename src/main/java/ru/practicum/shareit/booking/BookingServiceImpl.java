@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import ru.practicum.shareit.CustomPageRequest;
 import ru.practicum.shareit.exeption.NotFoundException;
 import ru.practicum.shareit.exeption.UnsupportedStatusException;
 import ru.practicum.shareit.item.jpa.ItemRepository;
@@ -34,7 +35,7 @@ public class BookingServiceImpl implements BookingService {
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException("item not found"));
         User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("user not found"));
 
-        if (!item.isAvailable())
+        if (!item.getAvailable())
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "item is not available");
         booking.setBooker(user);
         booking.setItem(item);
@@ -98,14 +99,16 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<Booking> getAllBookings(long userId, String state, Integer from, Integer size) {
         State status = checkStatus(state);
-        if (userRepository.findById(userId).isEmpty()) throw new NotFoundException("User not found");
+        if (!userRepository.existsById(userId)) {
+            throw new NotFoundException("User not found");
+        }
         List<Booking> bookings = List.of();
         LocalDateTime now = LocalDateTime.now().withNano(0);
         if (from == null && size == null) {
             from = 0;
             size = 10;
         }
-        PageRequest pageRequest = PageRequest.of(from / size, size);
+        CustomPageRequest pageRequest = new CustomPageRequest(from,size);
 
         switch (status) {
             case ALL:
@@ -143,7 +146,7 @@ public class BookingServiceImpl implements BookingService {
             from = 0;
             size = 10;
         }
-        PageRequest pageRequest = PageRequest.of(from / size, size);
+        CustomPageRequest pageRequest = new CustomPageRequest(from,size);
 
         switch (status) {
             case ALL:

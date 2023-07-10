@@ -20,9 +20,9 @@ public class ItemMapperImpl implements ItemMapper {
     @Override
     public ItemDto itemToItemDto(Item item) {
         if (item.getRequest() == null)
-            return new ItemDto(item.getId(), item.getName(), item.getDescription(), item.isAvailable());
+            return new ItemDto(item.getId(), item.getName(), item.getDescription(), item.getAvailable());
 
-        return new ItemDto(item.getId(), item.getName(), item.getDescription(), item.isAvailable(), item.getRequest().getId());
+        return new ItemDto(item.getId(), item.getName(), item.getDescription(), item.getAvailable(), item.getRequest().getId());
     }
 
     @Override

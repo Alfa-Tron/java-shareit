@@ -63,9 +63,9 @@ public class RestItemRequestTests {
     @MockBean
     private BookingService bookingService;
     @MockBean
-    UserRepository repositoryUser;
+    private UserRepository repositoryUser;
     @MockBean
-    ItemRequestService itemRequestService;
+    private ItemRequestService itemRequestService;
     @Mock
     private ItemRepository itemRepository;
 

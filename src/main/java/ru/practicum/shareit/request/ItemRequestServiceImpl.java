@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.CustomPageRequest;
 import ru.practicum.shareit.exeption.NotFoundException;
 import ru.practicum.shareit.item.jpa.ItemRepository;
 import ru.practicum.shareit.item.model.Item;
@@ -80,7 +81,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
             return dtos;
         }
         Sort sort = Sort.by(Sort.Direction.DESC, "created");
-        PageRequest pageRequest = PageRequest.of(from / size, size, sort);
+        CustomPageRequest pageRequest = new CustomPageRequest(from,size,sort);
         User currentUser = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
         Page<ItemRequest> itemRequestPage = requestRepository.findAllByRequestorNot(currentUser, pageRequest);
 

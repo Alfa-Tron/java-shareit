@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-
+@Getter
+@Setter
 public class ItemRequestDto {
     private long id;
     private String description;
@@ -27,16 +27,6 @@ public class ItemRequestDto {
     public ItemRequestDto() {
         items = Collections.emptyList();
     }
-
-
-    public List<Items> getItems() {
-        return items;
-    }
-
-    public void setItems(List<Items> items) {
-        this.items = items;
-    }
-
     @Setter
     @Getter
     public static class Items {
@@ -46,11 +36,6 @@ public class ItemRequestDto {
         private boolean available;
         private long requestId;
     }
-
-    public Requester getRequestor() {
-        return requestor;
-    }
-
     @Getter
     @Setter
     static class Requester {
@@ -63,26 +48,6 @@ public class ItemRequestDto {
         public long getId() {
             return id;
         }
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDateTime getCreated() {
-        return created;
     }
 }
 

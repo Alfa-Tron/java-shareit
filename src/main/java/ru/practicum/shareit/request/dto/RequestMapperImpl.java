@@ -34,7 +34,7 @@ public class RequestMapperImpl implements RequestMapper {
         ItemRequestDto.Items items1 = new ItemRequestDto.Items();
         items1.setId(k.getId());
         items1.setName(k.getName());
-        items1.setAvailable(k.isAvailable());
+        items1.setAvailable(k.getAvailable());
         items1.setDescription(k.getDescription());
         items1.setRequestId(k.getRequest().getId());
         return items1;

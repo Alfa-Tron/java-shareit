@@ -1,6 +1,8 @@
 package ru.practicum.shareit.request;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import ru.practicum.shareit.user.User;
 
@@ -10,6 +12,8 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "requests")
 @NoArgsConstructor
+@Getter
+@Setter
 @EnableJpaRepositories(basePackages = "ru.practicum")
 public class ItemRequest {
     @Id
@@ -30,39 +34,7 @@ public class ItemRequest {
         this.requestor = requestor;
     }
 
-    public void setCreated(LocalDateTime localDateTime) {
-        this.created = localDateTime;
-    }
-
-    public LocalDateTime getCreated() {
-        return created;
-    }
-
     public ItemRequest(String description) {
-        this.description = description;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public User getRequestor() {
-        return requestor;
-    }
-
-    public void setRequestor(User requestor) {
-        this.requestor = requestor;
+        this.description=description;
     }
 }

@@ -1,6 +1,7 @@
 package ru.practicum.shareit.comment;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.practicum.shareit.item.Marker;
 import ru.practicum.shareit.item.model.Item;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 @Table(name = "comments")
 @Getter
 @Setter
+@NoArgsConstructor
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,15 +38,6 @@ public class Comment {
         this.text = text;
         this.item = item;
         this.authorName = author;
-    }
-
-    public Comment() {
-
-    }
-
-    public Comment(String text, Item item) {
-        this.text = text;
-        this.item = item;
     }
 
     public Comment(String text) {

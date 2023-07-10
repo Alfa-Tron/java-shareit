@@ -25,7 +25,6 @@ public class JpaTests {
 
     @Test
     void testFindAllByNameOrDescription() {
-        // Создаем тестовые данные
         Item item1 = new Item();
         item1.setName("Item 1");
         item1.setDescription("q Descrtesttion 1");
@@ -46,13 +45,11 @@ public class JpaTests {
         itemRepository.save(item2);
 
 
-        // Вызываем метод findAllByNameOrDescription с поисковым запросом и без пагинации
         String searchString = "Test";
         PageRequest pageRequest = PageRequest.of(0, 99);
         List<Item> o = itemRepository.findAll();
         Page<Item> result = itemRepository.findAllByNameOrDescription(searchString.toLowerCase(), pageRequest);
 
-        // Проверяем результаты
         assertThat(result).isNotNull();
         assertThat(result.getContent()).hasSize(1);
     }

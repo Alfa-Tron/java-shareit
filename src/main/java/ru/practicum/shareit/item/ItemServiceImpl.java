@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import ru.practicum.shareit.CustomPageRequest;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingRepository;
 import ru.practicum.shareit.booking.BookingStatus;
@@ -56,7 +57,7 @@ public class ItemServiceImpl implements ItemService {
         LocalDateTime now = LocalDateTime.now().withNano(0);
         Optional<Booking> lastBookings = bookingRepository.findFirstByItemAndItem_Owner_IdAndStartLessThanEqualOrderByStartDesc(item, userId, now);
         Optional<Booking> nextBookings = bookingRepository.findFirstByItemAndItem_Owner_IdAndStartAfterOrderByStartAsc(item, userId, now);
-        ItemDto i = new ItemDto(item.getId(), item.getName(), item.getDescription(), item.isAvailable());
+        ItemDto i = new ItemDto(item.getId(), item.getName(), item.getDescription(), item.getAvailable());
 
         if (lastBookings.isPresent()) {
             Booking last = lastBookings.get();
@@ -64,7 +65,7 @@ public class ItemServiceImpl implements ItemService {
         }
 
         if (nextBookings.isPresent()) {
-            if (lastBookings.isPresent() && lastBookings.get().getId().longValue() != nextBookings.get().getId().longValue()) {
+            if (lastBookings.isPresent() && lastBookings.get().getId() != nextBookings.get().getId()) {
                 Booking next = nextBookings.get();
 
                 i.setNextBooking(new ItemDto.BookingItemsDto(next.getId(), next.getBooker().getId()));
@@ -81,7 +82,7 @@ public class ItemServiceImpl implements ItemService {
             from = 0;
             size = 99;
         }
-        PageRequest pageRequest = PageRequest.of((from) / size, size);
+        CustomPageRequest pageRequest = new CustomPageRequest(from,size);
         List<Item> items = repositoryItem.findByOwnerId(userId, pageRequest).getContent();
         List<ItemDto> itemsDto = new ArrayList<>();
         LocalDateTime now = LocalDateTime.now().withNano(0);
@@ -98,12 +99,12 @@ public class ItemServiceImpl implements ItemService {
         for (Item entry : items) {
             List<Comment> value = comments.get(entry);
 
-            ItemDto i = new ItemDto(entry.getId(), entry.getName(), entry.getDescription(), entry.isAvailable());
+            ItemDto i = new ItemDto(entry.getId(), entry.getName(), entry.getDescription(), entry.getAvailable());
             if (!lastBookings.isEmpty() && !nextBookings.isEmpty()) {
                 if (lastBookings.containsKey(entry) && nextBookings.containsKey(entry)) {
                     Booking last = lastBookings.get(entry).get(0);
                     Booking next = nextBookings.get(entry).get(0);
-                    if (last.getId().longValue() == next.getId().longValue()) {
+                    if (last.getId() == next.getId()) {
                         i.setLastBooking(new ItemDto.BookingItemsDto(last.getId(), last.getBooker().getId()));
                     } else {
                         i.setLastBooking(new ItemDto.BookingItemsDto(last.getId(), last.getBooker().getId()));
@@ -127,7 +128,7 @@ public class ItemServiceImpl implements ItemService {
             from = 0;
             size = 99;
         }
-        PageRequest pageRequest = PageRequest.of((from) / size, size);
+        CustomPageRequest pageRequest = new CustomPageRequest(from,size);
 
         return itemMapper.listToDtoList(repositoryItem.findAllByNameOrDescription(searchText.toLowerCase(), pageRequest).getContent());
 
@@ -148,7 +149,7 @@ public class ItemServiceImpl implements ItemService {
             item.setDescription(updatedItem.getDescription());
         if (updatedItem.getName() != null && !updatedItem.getName().isBlank())
             item.setName(updatedItem.getName());
-        if (updatedItem.isAvailable() != null) item.setAvailable(updatedItem.isAvailable());
+        if (updatedItem.getAvailable() != null) item.setAvailable(updatedItem.getAvailable());
         return itemMapper.itemToItemDto(item);
     }
 

@@ -1,5 +1,8 @@
 package ru.practicum.shareit.user.dto;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import ru.practicum.shareit.item.Marker;
 
 import javax.validation.constraints.Email;
@@ -7,6 +10,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+@NoArgsConstructor
+@Setter
+@Getter
 public class UserDto {
     private long id;
     @NotBlank(groups = Marker.OnCreate.class)
@@ -21,33 +27,4 @@ public class UserDto {
         this.name = name;
         this.email = email;
     }
-
-    public UserDto() {
-
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
 }

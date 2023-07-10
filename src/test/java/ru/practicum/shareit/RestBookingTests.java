@@ -63,7 +63,7 @@ public class RestBookingTests {
     @MockBean
     private BookingService bookingService;
     @MockBean
-    UserRepository repositoryUser;
+    private UserRepository repositoryUser;
     @Mock
     private ItemRepository itemRepository;
 

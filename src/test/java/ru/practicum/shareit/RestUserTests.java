@@ -42,10 +42,10 @@ public class RestUserTests {
     @Autowired
     private UserMapper userMapper;
     @Autowired
-    ObjectMapper mapper;
+    private ObjectMapper mapper;
 
     @MockBean
-    UserService userService;
+    private UserService userService;
 
     @Autowired
     private MockMvc mvc;

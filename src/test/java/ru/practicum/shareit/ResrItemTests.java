@@ -56,7 +56,7 @@ public class ResrItemTests {
     @MockBean
     private ItemService itemService;
     @MockBean
-    UserRepository repositoryUser;
+    private UserRepository repositoryUser;
     @Mock
     private ItemRepository itemRepository;
 
