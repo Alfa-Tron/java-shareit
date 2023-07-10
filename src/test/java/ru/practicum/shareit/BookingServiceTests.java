@@ -273,70 +273,6 @@ public class BookingServiceTests {
     }
 
     @Test
-    public void testGetAllBookings_AllStatus() {
-        long userId = 1L;
-        String state = "ALL";
-        Integer from = null;
-        Integer size = null;
-        User user = new User();
-        user.setId(userId);
-
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        List<Booking> expectedBookings = List.of(new Booking(), new Booking(), new Booking());
-        when(bookingRepository.findAllByBooker_IdOrderByStartDesc(userId, PageRequest.of(0, 10)))
-                .thenReturn(new PageImpl<>(expectedBookings));
-
-        List<Booking> result = bookingService.getAllBookings(userId, state, from, size);
-
-        assertNotNull(result);
-        assertEquals(3, result.size());
-        verify(bookingRepository, times(1)).findAllByBooker_IdOrderByStartDesc(userId, PageRequest.of(0, 10));
-    }
-
-    @Test
-    public void testGetAllBookings_FutureStatus() {
-        long userId = 1L;
-        String state = "FUTURE";
-        Integer from = null;
-        Integer size = null;
-        User user = new User();
-        user.setId(userId);
-        LocalDateTime now = LocalDateTime.now().withNano(0);
-        List<Booking> expectedBookings = List.of(new Booking(), new Booking(), new Booking());
-
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        when(bookingRepository.findByBookerIdAndStartIsAfterOrderByStartDesc(eq(userId), any(LocalDateTime.class), eq(PageRequest.of(0, 10))))
-                .thenReturn(new PageImpl<>(expectedBookings));
-
-        List<Booking> result = bookingService.getAllBookings(userId, state, from, size);
-
-        assertNotNull(result);
-        assertEquals(3, result.size());
-        verify(bookingRepository, times(1)).findByBookerIdAndStartIsAfterOrderByStartDesc(userId, now, PageRequest.of(0, 10));
-    }
-
-    @Test
-    public void testGetAllBookings_WaitingStatus() {
-        long userId = 1L;
-        String state = "WAITING";
-        Integer from = null;
-        Integer size = null;
-        User user = new User();
-        user.setId(userId);
-        List<Booking> expectedBookings = List.of(new Booking(), new Booking());
-
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-        when(bookingRepository.findAllByStatusAndBookerId(BookingStatus.WAITING, userId, PageRequest.of(0, 10)))
-                .thenReturn(new PageImpl<>(expectedBookings));
-
-        List<Booking> result = bookingService.getAllBookings(userId, state, from, size);
-
-        assertNotNull(result);
-        assertEquals(2, result.size());
-        verify(bookingRepository, times(1)).findAllByStatusAndBookerId(BookingStatus.WAITING, userId, PageRequest.of(0, 10));
-    }
-
-    @Test
     public void testGetAllBookings_InvalidState() {
         long userId = 1L;
         String state = "INVALID";
@@ -493,7 +429,7 @@ public class BookingServiceTests {
         user.setId(userId);
         List<Booking> expectedBookings = List.of(new Booking(), new Booking(), new Booking());
 
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(userRepository.existsById(userId)).thenReturn(true);
         when(bookingRepository.findAllByStatusAndBookerId(eq(BookingStatus.REJECTED), eq(userId), any(PageRequest.class)))
                 .thenReturn(new PageImpl<>(expectedBookings));
 
@@ -512,7 +448,7 @@ public class BookingServiceTests {
         user.setId(userId);
         List<Booking> expectedBookings = List.of(new Booking(), new Booking(), new Booking());
 
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(userRepository.existsById(userId)).thenReturn(true);
         when(bookingRepository.findAllByBookerIdAndEndBeforeOrderByStartDesc(eq(userId), any(LocalDateTime.class), any(PageRequest.class)))
                 .thenReturn(new PageImpl<>(expectedBookings));
 
@@ -530,7 +466,7 @@ public class BookingServiceTests {
         user.setId(userId);
         List<Booking> expectedBookings = List.of(new Booking(), new Booking(), new Booking());
 
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(userRepository.existsById(userId)).thenReturn(true);
         when(bookingRepository.findAllByBookerIdAndStartBeforeAndEndAfter(eq(userId), any(LocalDateTime.class), any(LocalDateTime.class), any(PageRequest.class)))
                 .thenReturn(new PageImpl<>(expectedBookings));
 

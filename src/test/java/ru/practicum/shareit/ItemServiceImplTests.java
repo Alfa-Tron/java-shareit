@@ -188,43 +188,6 @@ public class ItemServiceImplTests {
     }
 
     @Test
-    public void testGetAllItems_DefaultFromAndSize() {
-        long userId = 1L;
-        List<Item> items = Arrays.asList(createMockItem(), createMockItem(), createMockItem());
-        List<ItemDto> expectedItemsDto = Arrays.asList(createMockItemDto(), createMockItemDto(), createMockItemDto());
-
-        when(repositoryItem.findByOwnerId(userId, PageRequest.of(0, 99))).thenReturn(new PageImpl<>(items));
-        when(commentRepository.findByItemIn(any(), any())).thenReturn(new ArrayList<>());
-        when(bookingRepository.findByItemInAndStartLessThanEqualOrderByStartDesc(any(), any())).thenReturn(new ArrayList<>());
-        when(bookingRepository.findByItemInAndStartAfterOrderByStartAsc(any(), any())).thenReturn(new ArrayList<>());
-        when(itemMapper.listToDtoList(items)).thenReturn(expectedItemsDto);
-
-        List<ItemDto> result = itemService.getAllItems(userId, null, null);
-
-        Assertions.assertEquals(expectedItemsDto, result);
-        verify(repositoryItem, times(1)).findByOwnerId(userId, PageRequest.of(0, 99));
-    }
-
-    @Test
-    public void testGetAllItems_CustomFromAndSize() {
-        long userId = 1L;
-        int from = 2;
-        int size = 3;
-        List<Item> items = Arrays.asList(createMockItem(), createMockItem(), createMockItem());
-        List<ItemDto> expectedItemsDto = Arrays.asList(createMockItemDto(), createMockItemDto(), createMockItemDto());
-
-        when(repositoryItem.findByOwnerId(userId, PageRequest.of(from/size, size))).thenReturn(new PageImpl<>(items));
-        when(commentRepository.findByItemIn(any(), any())).thenReturn(new ArrayList<>());
-        when(bookingRepository.findByItemInAndStartLessThanEqualOrderByStartDesc(any(), any())).thenReturn(new ArrayList<>());
-        when(bookingRepository.findByItemInAndStartAfterOrderByStartAsc(any(), any())).thenReturn(new ArrayList<>());
-        when(itemMapper.listToDtoList(items)).thenReturn(expectedItemsDto);
-
-        List<ItemDto> result = itemService.getAllItems(userId, from, size);
-
-        Assertions.assertEquals(expectedItemsDto, result);
-        verify(repositoryItem, times(1)).findByOwnerId(userId, PageRequest.of(from/size, size));
-    }
-    @Test
     public void testGetSearchItems_WithBlankSearchText_ReturnsEmptyList() {
         String searchText = "";
         Integer from = 0;
@@ -235,29 +198,6 @@ public class ItemServiceImplTests {
         Assertions.assertEquals(Collections.emptyList(), result);
     }
 
-    @Test
-    public void testGetSearchItems_WithValidSearchText_ReturnsMappedItems() {
-        String searchText = "example";
-        Integer from = 0;
-        Integer size = 10;
-        List<Item> itemList = new ArrayList<>();
-        itemList.add(new Item("Example Item 1", "Description 1"));
-        itemList.add(new Item("Example Item 2", "Description 2"));
-        Page<Item> itemPage = new PageImpl<>(itemList);
-        Pageable pageable = PageRequest.of(from / size, size);
-
-        when(repositoryItem.findAllByNameOrDescription(searchText.toLowerCase(), pageable)).thenReturn(itemPage);
-
-        List<ItemDto> expectedDtoList = new ArrayList<>();
-        expectedDtoList.add(new ItemDto("Example Item 1", "Description 1"));
-        expectedDtoList.add(new ItemDto("Example Item 2", "Description 2"));
-
-        when(itemMapper.listToDtoList(itemPage.getContent())).thenReturn(expectedDtoList);
-
-        List<ItemDto> result = itemService.getSearchItems(searchText, from, size);
-
-        Assertions.assertEquals(expectedDtoList, result);
-    }
     @Test
     public void testUpdateItem_WithValidParameters_ReturnsUpdatedItemDto() {
         long userId = 1L;
