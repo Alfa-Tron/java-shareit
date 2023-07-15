@@ -1,6 +1,7 @@
 package ru.practicum.shareit.item.dto;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.practicum.shareit.item.Marker;
 
@@ -11,6 +12,7 @@ import javax.validation.constraints.Size;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class ItemDtoIn {
     @NotBlank(groups = Marker.OnCreate.class)
     @Size(max = 50, groups = {Marker.OnCreate.class, Marker.OnUpdate.class})
@@ -20,11 +22,6 @@ public class ItemDtoIn {
     private String description;
     @NotNull(groups = Marker.OnCreate.class)
     private Boolean available;
+    private long requestId;
 
-
-    public ItemDtoIn(String name, String description, Boolean available) {
-        this.name = name;
-        this.description = description;
-        this.available = available;
-    }
 }

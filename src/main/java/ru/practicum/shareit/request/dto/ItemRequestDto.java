@@ -1,53 +1,57 @@
 package ru.practicum.shareit.request.dto;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.practicum.shareit.user.User;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-
+@Getter
+@Setter
 public class ItemRequestDto {
     private long id;
     private String description;
-    private User requestor;
+    private Requester requestor;
     private LocalDateTime created;
+    private List<Items> items = new ArrayList<>();
 
     public ItemRequestDto(long id, String description, User requestor, LocalDateTime created) {
         this.id = id;
         this.description = description;
-        this.requestor = requestor;
+        this.requestor = new Requester(requestor.getId());
         this.created = created;
     }
 
-    public long getId() {
-        return id;
+    public ItemRequestDto() {
+        items = Collections.emptyList();
     }
 
-    public void setId(long id) {
-        this.id = id;
+    @Setter
+    @Getter
+    public static class Items {
+        private long id;
+        private String name;
+        private String description;
+        private boolean available;
+        private long requestId;
     }
 
-    public String getDescription() {
-        return description;
-    }
+    @Getter
+    @Setter
+    static class Requester {
+        private long id;
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+        public Requester(long id) {
+            this.id = id;
+        }
 
-    public User getRequestor() {
-        return requestor;
-    }
-
-    public void setRequestor(User requestor) {
-        this.requestor = requestor;
-    }
-
-    public LocalDateTime getCreated() {
-        return created;
-    }
-
-    public void setCreated(LocalDateTime created) {
-        this.created = created;
+        public long getId() {
+            return id;
+        }
     }
 }
+
 

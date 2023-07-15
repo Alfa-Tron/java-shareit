@@ -14,6 +14,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository repositoryUser;
+
     @Transactional
     public User createUser(User user) {
         return repositoryUser.save(user);

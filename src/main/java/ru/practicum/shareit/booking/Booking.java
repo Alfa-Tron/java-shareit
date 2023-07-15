@@ -1,6 +1,8 @@
 package ru.practicum.shareit.booking;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
@@ -12,6 +14,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Table(name = "bookings")
 @EnableJpaRepositories(basePackages = "ru.practicum")
+@Getter
+@Setter
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,54 +38,10 @@ public class Booking {
         this.end = end;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public LocalDateTime getStart() {
-        return start;
-    }
-
-    public void setStart(LocalDateTime start) {
-        this.start = start;
-    }
-
-    public LocalDateTime getEnd() {
-        return end;
-    }
-
-    public void setEnd(LocalDateTime end) {
-        this.end = end;
-    }
-
-    public Item getItem() {
-        return item;
-    }
-
-    public void setItem(Item item) {
-        this.item = item;
-    }
-
-    public User getBooker() {
-        return booker;
-    }
-
-    public void setBooker(User booker) {
-        this.booker = booker;
-    }
-
     public BookingStatus getStatus() {
         if (status == null) {
             return BookingStatus.WAITING;
         }
         return status;
-    }
-
-    public void setStatus(BookingStatus status) {
-        this.status = status;
     }
 }

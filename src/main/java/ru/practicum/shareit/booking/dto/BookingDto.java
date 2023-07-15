@@ -2,6 +2,7 @@ package ru.practicum.shareit.booking.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import ru.practicum.shareit.booking.BookingStatus;
 
 import java.time.LocalDateTime;
 
@@ -48,9 +49,10 @@ public class BookingDto {
         }
 
     }
+
     public String getStatus() {
         if (status == null) {
-            return "WAITING";
+            return BookingStatus.WAITING.name();
         }
         return status;
     }
