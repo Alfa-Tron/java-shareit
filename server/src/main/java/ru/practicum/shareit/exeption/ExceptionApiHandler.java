@@ -30,7 +30,7 @@ public class ExceptionApiHandler {
     }
 
     @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<ErrorMessage> ResponseStatusException(ResponseStatusException exception) {
+    public ResponseEntity<ErrorMessage> responseStatusException(ResponseStatusException exception) {
         log.debug("Получен статус 400 Bad request {}", exception.getStackTrace(), exception);
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
