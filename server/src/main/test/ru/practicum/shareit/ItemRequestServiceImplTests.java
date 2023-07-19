@@ -43,6 +43,7 @@ public class ItemRequestServiceImplTests {
 
     @InjectMocks
     private ItemRequestServiceImpl itemRequestService;
+
     @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
@@ -78,7 +79,7 @@ public class ItemRequestServiceImplTests {
         NotFoundException exception = assertThrows(NotFoundException.class,
                 () -> itemRequestService.createRequest(userId, request));
 
-        Assertions.assertEquals(exception.getMessage(),"User not found");
+        Assertions.assertEquals(exception.getMessage(), "User not found");
 
     }
 
@@ -126,7 +127,7 @@ public class ItemRequestServiceImplTests {
         NotFoundException exception = assertThrows(NotFoundException.class,
                 () -> itemRequestService.getRequests(userId));
 
-        Assertions.assertEquals(exception.getMessage(),"User not found");
+        Assertions.assertEquals(exception.getMessage(), "User not found");
     }
 
     @Test
@@ -163,7 +164,7 @@ public class ItemRequestServiceImplTests {
         NotFoundException exception = assertThrows(NotFoundException.class,
                 () -> itemRequestService.getRequestOne(id, userId));
 
-        Assertions.assertEquals(exception.getMessage(),"Request not found");
+        Assertions.assertEquals(exception.getMessage(), "Request not found");
 
 
     }
@@ -178,7 +179,7 @@ public class ItemRequestServiceImplTests {
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
         NotFoundException exception = assertThrows(NotFoundException.class,
                 () -> itemRequestService.getRequestOne(id, userId));
-        Assertions.assertEquals(exception.getMessage(),"User not found");
+        Assertions.assertEquals(exception.getMessage(), "User not found");
 
     }
 

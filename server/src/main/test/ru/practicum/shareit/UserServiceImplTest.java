@@ -18,6 +18,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+
 @Transactional
 
 public class UserServiceImplTest {
@@ -32,6 +33,7 @@ public class UserServiceImplTest {
     public void setup() {
         MockitoAnnotations.openMocks(this);
     }
+
     @Test
     public void testCreateUser() {
 
@@ -78,7 +80,7 @@ public class UserServiceImplTest {
         NotFoundException exception = assertThrows(NotFoundException.class,
                 () -> userService.getUserById(userId));
 
-        assertEquals(exception.getMessage(),"Пользователь не найден");
+        assertEquals(exception.getMessage(), "Пользователь не найден");
     }
 
     @Test
@@ -111,7 +113,7 @@ public class UserServiceImplTest {
         NotFoundException exception = assertThrows(NotFoundException.class,
                 () -> userService.updateUser(user));
 
-        assertEquals(exception.getMessage(),"User not found");
+        assertEquals(exception.getMessage(), "User not found");
 
     }
 

@@ -23,12 +23,14 @@ import ru.practicum.shareit.item.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.jpa.UserRepository;
+
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.mockito.Mockito.when;
+
 @Transactional
 
 public class ItemServiceImplTests {
@@ -237,6 +239,7 @@ public class ItemServiceImplTests {
 
         Assertions.assertEquals(expectedDto, result);
     }
+
     @Test
     public void testDeleteItem_WithValidId_CallsRepositoryDeleteById() {
         long id = 1L;
@@ -245,6 +248,7 @@ public class ItemServiceImplTests {
 
         verify(repositoryItem).deleteById(id);
     }
+
     @Test
     public void testAddComment_WithValidData_CommentAddedSuccessfully() {
         Long itemId = 1L;

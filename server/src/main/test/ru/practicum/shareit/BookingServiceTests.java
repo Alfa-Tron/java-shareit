@@ -25,6 +25,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+
 @Transactional
 
 public class BookingServiceTests {
@@ -309,7 +310,6 @@ public class BookingServiceTests {
     }
 
 
-
     @Test
     public void testGetBookingOwner_UserNotFound() {
         long userId = 1L;
@@ -323,6 +323,7 @@ public class BookingServiceTests {
             bookingService.getBookingOwner(userId, state, from, size);
         });
     }
+
     @Test
     public void testGetBookingOwner_WaitingStatus() {
         long userId = 1L;
@@ -401,6 +402,7 @@ public class BookingServiceTests {
 
         Assertions.assertEquals(1, result.size());
     }
+
     @Test
     public void testGetBookingOwner_AllStatus() {
         long userId = 1L;
@@ -419,6 +421,7 @@ public class BookingServiceTests {
 
         Assertions.assertEquals(3, result.size());
     }
+
     @Test
     public void testGetAllBookings_RejectedStatus() {
         long userId = 1L;
@@ -456,6 +459,7 @@ public class BookingServiceTests {
 
         Assertions.assertEquals(3, result.size());
     }
+
     @Test
     public void testGetAllBookings_CurrentStatus() {
         long userId = 1L;
@@ -474,5 +478,6 @@ public class BookingServiceTests {
 
         Assertions.assertEquals(3, result.size());
 
-    }}
+    }
+}
 

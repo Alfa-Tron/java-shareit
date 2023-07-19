@@ -8,7 +8,6 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingDtoIn;
 import ru.practicum.shareit.booking.mapper.BookingMapper;
 
-
 import java.util.List;
 
 
@@ -42,13 +41,13 @@ public class BookingController {
     }
 
     @GetMapping
-    public List<BookingDto> getAllBookings(@RequestHeader("X-Sharer-User-Id") long userId, @RequestParam(defaultValue = "ALL") String state, @RequestParam(value = "from", required = false) Integer from,  @RequestParam(value = "size", required = false) Integer size) {
+    public List<BookingDto> getAllBookings(@RequestHeader("X-Sharer-User-Id") long userId, @RequestParam(defaultValue = "ALL") String state, @RequestParam(value = "from", required = false) Integer from, @RequestParam(value = "size", required = false) Integer size) {
         log.info("getAllBookings userId: {}, state: {}, from: {}, size: {}", userId, state, from, size);
         return bookingMapper.bookingListToBookingDtoList(bookingService.getAllBookings(userId, state, from, size));
     }
 
     @GetMapping("/owner")
-    public List<BookingDto> getBookingOwner(@RequestHeader("X-Sharer-User-Id") long userId, @RequestParam(defaultValue = "ALL") String state,  @RequestParam(value = "from", required = false) Integer from,  @RequestParam(value = "size", required = false) Integer size) {
+    public List<BookingDto> getBookingOwner(@RequestHeader("X-Sharer-User-Id") long userId, @RequestParam(defaultValue = "ALL") String state, @RequestParam(value = "from", required = false) Integer from, @RequestParam(value = "size", required = false) Integer size) {
         log.info("getBookingOwner userId: {}, from: {}, size: {}", userId, from, size);
         return bookingMapper.bookingListToBookingDtoList(bookingService.getBookingOwner(userId, state, from, size));
     }

@@ -10,7 +10,6 @@ import shareit.item.dto.CommentDtoIn;
 import shareit.item.dto.ItemDtoIn;
 import shareit.user.dto.Marker;
 
-
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 

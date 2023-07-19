@@ -29,11 +29,11 @@ public class ItemClient extends BaseClient {
     }
 
     public ResponseEntity<Object> createItem(long userId, ItemDtoIn item) {
-        return post("",userId,item);
+        return post("", userId, item);
     }
 
     public ResponseEntity<Object> getItemById(long id, long userId) {
-        return  get("/"+id,userId);
+        return get("/" + id, userId);
     }
 
     public ResponseEntity<Object> getItemByUser(long userId, Integer from, Integer size) {
@@ -42,28 +42,28 @@ public class ItemClient extends BaseClient {
         parameters.put("from", from);
         parameters.put("size", size);
 
-        return get("",userId,parameters);
+        return get("", userId, parameters);
     }
 
     public ResponseEntity<Object> searchItems(String text, Integer from, Integer size) {
 
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("text",text);
+        parameters.put("text", text);
         parameters.put("from", from);
         parameters.put("size", size);
 
-        return  get("/search?text={text}&from={from}&size={size}",null,parameters);
+        return get("/search?text={text}&from={from}&size={size}", null, parameters);
     }
 
     public ResponseEntity<Object> addComment(Long itemId, long userId, CommentDtoIn comment) {
-    return  post("/"+itemId+"/comment",userId,comment);
+        return post("/" + itemId + "/comment", userId, comment);
     }
 
     public ResponseEntity<Object> updateItem(long userId, long id, ItemDtoIn updatedItem) {
-    return patch("/"+id,userId,updatedItem);
+        return patch("/" + id, userId, updatedItem);
     }
 
     public ResponseEntity<Object> deleteItem(long id) {
-        return delete("/"+id);
+        return delete("/" + id);
     }
 }

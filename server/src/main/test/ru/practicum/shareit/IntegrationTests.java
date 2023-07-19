@@ -74,6 +74,7 @@ public class IntegrationTests {
 
         Assertions.assertEquals(1, result.size());
     }
+
     @Test
     void testGetAllItems() {
         User user = new User();

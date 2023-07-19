@@ -100,6 +100,7 @@ public class RestItemRequestTests {
 
         verify(itemRequestService, times(1)).createRequest(eq(userId), any(ItemRequest.class));
     }
+
     @Test
     void testGetItemByIdList() throws Exception {
         long userId = 123;
@@ -126,6 +127,7 @@ public class RestItemRequestTests {
 
         verify(itemRequestService, times(1)).getRequests(userId);
     }
+
     @Test
     void testGetAllRequests() throws Exception {
         long userId = 123;
@@ -157,6 +159,7 @@ public class RestItemRequestTests {
 
         verify(itemRequestService, times(1)).getAllRequests(from, size, userId);
     }
+
     @Test
     void testGetItemById() throws Exception {
         long requestId = 123;

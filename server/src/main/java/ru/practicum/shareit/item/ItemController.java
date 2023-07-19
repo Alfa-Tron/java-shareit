@@ -37,13 +37,13 @@ public class ItemController {
     }
 
     @GetMapping
-    public List<ItemDto> getItemByUser(@RequestHeader("X-Sharer-User-Id") long userId, @RequestParam(value = "from", required = false) Integer from,  @RequestParam(value = "size", required = false) Integer size) {
+    public List<ItemDto> getItemByUser(@RequestHeader("X-Sharer-User-Id") long userId, @RequestParam(value = "from", required = false) Integer from, @RequestParam(value = "size", required = false) Integer size) {
         log.info("getItemByUser userId: {}, from: {}, size: {}", userId, from, size);
         return itemService.getAllItems(userId, from, size);
     }
 
     @GetMapping("/search")
-    public List<ItemDto> searchItems(@RequestParam("text") String searchText,  @RequestParam(value = "from", required = false) Integer from,  @RequestParam(value = "size", required = false) Integer size) {
+    public List<ItemDto> searchItems(@RequestParam("text") String searchText, @RequestParam(value = "from", required = false) Integer from, @RequestParam(value = "size", required = false) Integer size) {
         log.info("searchItems searchText: {}, from: {}, size: {}", searchText, from, size);
         return itemService.getSearchItems(searchText, from, size);
 

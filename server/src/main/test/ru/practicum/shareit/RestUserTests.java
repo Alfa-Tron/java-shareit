@@ -56,7 +56,7 @@ public class RestUserTests {
         userDto.setId(0L);
         userDto.setName("qe");
         userDto.setEmail("qwe.w@example.com");
-       User user= new User();
+        User user = new User();
         user.setName("qe");
         user.setEmail("qwe.w@example.com");
 
@@ -72,6 +72,7 @@ public class RestUserTests {
                 .andExpect(jsonPath("$.email", is(userDto.getEmail())));
         verify(userService, times(1)).createUser(any(User.class));
     }
+
     @Test
     void getAllUsers() throws Exception {
 
@@ -112,6 +113,7 @@ public class RestUserTests {
                 .andExpect(jsonPath("$[1].name").value(userDto2.getName()))
                 .andExpect(jsonPath("$[1].email").value(userDto2.getEmail()));
     }
+
     @Test
     void getUserById() throws Exception {
         User user1 = new User();
@@ -125,6 +127,7 @@ public class RestUserTests {
 
         verify(userService, times(1)).getUserById(user1.getId());
     }
+
     @Test
     void updateUser() throws Exception {
         User user2 = new User();
@@ -152,6 +155,7 @@ public class RestUserTests {
 
         verify(userService, times(1)).updateUser(any(User.class));
     }
+
     @Test
     void deleteUser() throws Exception {
         long id = 1L;

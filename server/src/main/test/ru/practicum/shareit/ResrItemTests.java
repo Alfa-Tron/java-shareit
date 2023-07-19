@@ -183,6 +183,7 @@ public class ResrItemTests {
                 .andExpect(jsonPath("$[1].description").value(item2.getDescription()))
                 .andExpect(jsonPath("$[1].available").value(item2.getAvailable()));
     }
+
     @Test
     public void testAddComment() throws Exception {
         long itemId = 1L;
@@ -205,11 +206,12 @@ public class ResrItemTests {
         mvc.perform(post("/items/" + itemId + "/comment")
                         .header("X-Sharer-User-Id", userId)
                         .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(commentDtoIn)))
+                        .content(mapper.writeValueAsString(commentDtoIn)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(expectedCommentDto.getId()))
                 .andExpect(jsonPath("$.text").value(expectedCommentDto.getText()));
     }
+
     @Test
     public void testUpdateItem() throws Exception {
         long userId = 1L;
@@ -228,7 +230,7 @@ public class ResrItemTests {
         item.setName("Updated Item");
         item.setDescription("Updated Description");
 
-        when(itemService.updateItem(anyLong(),anyLong(), any(Item.class)))
+        when(itemService.updateItem(anyLong(), anyLong(), any(Item.class)))
                 .thenReturn(updatedItemDto);
 
         mvc.perform(patch("/items/{id}", itemId)
@@ -240,6 +242,7 @@ public class ResrItemTests {
                 .andExpect(jsonPath("$.name").value(updatedItemDto.getName()))
                 .andExpect(jsonPath("$.description").value(updatedItemDto.getDescription()));
     }
+
     @Test
     public void testDeleteItem() throws Exception {
         long itemId = 1L;

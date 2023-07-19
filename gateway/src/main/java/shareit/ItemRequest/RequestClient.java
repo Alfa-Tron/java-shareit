@@ -10,7 +10,6 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import shareit.ItemRequest.dto.ItemRequestDtoIn;
 import shareit.client.BaseClient;
 
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,15 +29,15 @@ public class RequestClient extends BaseClient {
 
 
     public ResponseEntity<Object> createRequest(long userId, ItemRequestDtoIn requestDtoIn) {
-   return post("",userId,requestDtoIn);
+        return post("", userId, requestDtoIn);
     }
 
     public ResponseEntity<Object> getItemById(long id, long userId) {
-        return get("/"+id,userId);
+        return get("/" + id, userId);
     }
 
     public ResponseEntity<Object> getItemsById(long userId) {
-        return get("",userId);
+        return get("", userId);
     }
 
     public ResponseEntity<Object> getAllrequests(long userId, Integer from, Integer size) {
@@ -46,6 +45,6 @@ public class RequestClient extends BaseClient {
         parameters.put("from", from);
         parameters.put("size", size);
 
-        return get("/all", userId,parameters);
+        return get("/all", userId, parameters);
     }
 }

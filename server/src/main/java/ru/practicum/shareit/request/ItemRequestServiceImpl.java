@@ -72,14 +72,14 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Override
     public List<ItemRequestDto> getAllRequests(Integer from, Integer size, long userId) {
         if (from == null && size == null) {
-        from=0;
-        size=10;
+            from = 0;
+            size = 10;
         }
-            List<ItemRequest> list = requestRepository.findAllByOrderByCreatedAsc();
-            List<ItemRequestDto> dtos = new ArrayList<>(list.size());
-            for (ItemRequest s : list) {
-                dtos.add(requestMapper.requestToDto(s));
-            }
+        List<ItemRequest> list = requestRepository.findAllByOrderByCreatedAsc();
+        List<ItemRequestDto> dtos = new ArrayList<>(list.size());
+        for (ItemRequest s : list) {
+            dtos.add(requestMapper.requestToDto(s));
+        }
 
         Sort sort = Sort.by(Sort.Direction.DESC, "created");
         CustomPageRequest pageRequest = new CustomPageRequest(from, size, sort);

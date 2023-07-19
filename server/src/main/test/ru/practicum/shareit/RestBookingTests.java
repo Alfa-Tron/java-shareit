@@ -90,9 +90,9 @@ public class RestBookingTests {
         user1.setName("John");
         user1.setEmail("john@example.com");
 
-        BookingDtoIn bookingDtoIn = new BookingDtoIn(0L, LocalDateTime.now().plusSeconds(123),LocalDateTime.now().plusSeconds(144));
+        BookingDtoIn bookingDtoIn = new BookingDtoIn(0L, LocalDateTime.now().plusSeconds(123), LocalDateTime.now().plusSeconds(144));
 
-        BookingDto expectedBookingDto = new BookingDto(0L,LocalDateTime.now(),LocalDateTime.now().plusSeconds(1), BookingStatus.WAITING.toString(),1L,1L,"123");
+        BookingDto expectedBookingDto = new BookingDto(0L, LocalDateTime.now(), LocalDateTime.now().plusSeconds(1), BookingStatus.WAITING.toString(), 1L, 1L, "123");
 
         Booking booking = new Booking();
         booking.setStatus(BookingStatus.WAITING);
@@ -113,13 +113,14 @@ public class RestBookingTests {
                 .andExpect(jsonPath("$.status").value(expectedBookingDto.getStatus().toString()));
 
     }
+
     @Test
     public void testUpdateBookingStatus() throws Exception {
         long bookingId = 1L;
         boolean approved = true;
         long userId = 1L;
 
-        BookingDto expectedBookingDto = new BookingDto(0L,LocalDateTime.now(),LocalDateTime.now().plusSeconds(1), BookingStatus.WAITING.toString(),1L,1L,"123");
+        BookingDto expectedBookingDto = new BookingDto(0L, LocalDateTime.now(), LocalDateTime.now().plusSeconds(1), BookingStatus.WAITING.toString(), 1L, 1L, "123");
         User user1 = new User();
         user1.setId(userId);
         user1.setName("John");
@@ -143,12 +144,13 @@ public class RestBookingTests {
 
         verify(bookingService).approvedBooking(eq(bookingId), eq(approved), eq(userId));
     }
+
     @Test
     public void testGetBooking() throws Exception {
         long bookingId = 1L;
         long userId = 1L;
 
-        BookingDto expectedBookingDto = new BookingDto(0L,LocalDateTime.now(),LocalDateTime.now().plusSeconds(1), BookingStatus.WAITING.toString(),1L,1L,"123");
+        BookingDto expectedBookingDto = new BookingDto(0L, LocalDateTime.now(), LocalDateTime.now().plusSeconds(1), BookingStatus.WAITING.toString(), 1L, 1L, "123");
         User user1 = new User();
         user1.setId(userId);
         user1.setName("John");
@@ -170,6 +172,7 @@ public class RestBookingTests {
 
         verify(bookingService).getBooking(eq(bookingId), eq(userId));
     }
+
     @Test
     public void testGetAllBookings() throws Exception {
         long userId = 1L;
@@ -178,7 +181,7 @@ public class RestBookingTests {
         Integer size = 10;
 
         List<BookingDto> expectedBookingDtoList = new ArrayList<>();
-        BookingDto bookingDto1 = new BookingDto(0L,LocalDateTime.now(),LocalDateTime.now().plusSeconds(1), BookingStatus.WAITING.toString(),1L,1L,"123");
+        BookingDto bookingDto1 = new BookingDto(0L, LocalDateTime.now(), LocalDateTime.now().plusSeconds(1), BookingStatus.WAITING.toString(), 1L, 1L, "123");
         User user1 = new User();
         user1.setId(userId);
         user1.setName("John");
@@ -189,7 +192,7 @@ public class RestBookingTests {
         Item item = new Item();
         item.setId(1L);
         booking1.setItem(item);
-        BookingDto bookingDto2 = new BookingDto(0L,LocalDateTime.now(),LocalDateTime.now().plusSeconds(1), BookingStatus.WAITING.toString(),1L,1L,"123");
+        BookingDto bookingDto2 = new BookingDto(0L, LocalDateTime.now(), LocalDateTime.now().plusSeconds(1), BookingStatus.WAITING.toString(), 1L, 1L, "123");
         User user2 = new User();
         user1.setId(userId);
         user1.setName("John");
@@ -221,6 +224,7 @@ public class RestBookingTests {
 
         verify(bookingService).getAllBookings(eq(userId), eq(state), eq(from), eq(size));
     }
+
     @Test
     public void testGetBookingOwner() throws Exception {
         long userId = 1L;
@@ -229,8 +233,8 @@ public class RestBookingTests {
         Integer size = 10;
 
         List<BookingDto> expectedBookingDtoList = new ArrayList<>();
-        BookingDto bookingDto1 = new BookingDto(0L,LocalDateTime.now(),LocalDateTime.now().plusSeconds(1), BookingStatus.WAITING.toString(),1L,1L,"123");
-        BookingDto expectedBookingDto = new BookingDto(2L,LocalDateTime.now(),LocalDateTime.now().plusSeconds(1), BookingStatus.WAITING.toString(),1L,1L,"123");
+        BookingDto bookingDto1 = new BookingDto(0L, LocalDateTime.now(), LocalDateTime.now().plusSeconds(1), BookingStatus.WAITING.toString(), 1L, 1L, "123");
+        BookingDto expectedBookingDto = new BookingDto(2L, LocalDateTime.now(), LocalDateTime.now().plusSeconds(1), BookingStatus.WAITING.toString(), 1L, 1L, "123");
         expectedBookingDtoList.add(bookingDto1);
         expectedBookingDtoList.add(expectedBookingDto);
 

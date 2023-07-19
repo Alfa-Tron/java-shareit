@@ -3,7 +3,6 @@ package ru.practicum.shareit.comment;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import ru.practicum.shareit.item.Marker;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.User;
 
