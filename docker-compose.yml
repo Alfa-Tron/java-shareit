@@ -1,7 +1,7 @@
 version: '3.8'
 services:
   gateway:
-    build: gateway
+    build: ./gateway
     image: my-gateway-image
     container_name: shareit-gateway
     ports:
@@ -12,7 +12,7 @@ services:
       - SHAREIT_SERVER_URL=http://server:9090
 
   server:
-    build: server
+    build: ./server
     image: shareit-server:latest
     container_name:  shareit-server
     ports:
@@ -31,5 +31,5 @@ services:
     ports:
       - "6541:5432"
     environment:
-    - POSTGRES_USER=myuser
-    - POSTGRES_PASSWORD=mypassword
+    - POSTGRES_USER=root
+    - POSTGRES_PASSWORD=root
