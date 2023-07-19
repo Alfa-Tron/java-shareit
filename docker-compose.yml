@@ -13,7 +13,7 @@ services:
 
   server:
     build: ./server
-    image: shareit-server:latest
+    image: shareit-server
     container_name:  shareit-server
     ports:
       - "9090:9090"
@@ -26,7 +26,7 @@ services:
     image: postgres_db
     build:
       context: ./
-      dockerfile: ./Dockerfile.postgres
+      dockerfile: Dockerfile
     container_name: shareit-db
     ports:
       - "6541:5432"
