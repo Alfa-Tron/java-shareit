@@ -38,11 +38,6 @@ public class BookingServiceImpl implements BookingService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "item is not available");
         booking.setBooker(user);
         booking.setItem(item);
-        LocalDateTime start = booking.getStart();
-        LocalDateTime end = booking.getEnd();
-        if (start.isAfter(end)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "startTime < EndTime");
-        if (start.isEqual(end)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "startTime = EndTime");
-
         if (item.getOwner().getId() == user.getId()) {
             throw new NotFoundException("item not found");
         }

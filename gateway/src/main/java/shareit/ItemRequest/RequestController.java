@@ -33,7 +33,8 @@ public class RequestController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Object> getAllRequests(@PositiveOrZero @RequestParam(value = "from", required = false) Integer from, @Positive @RequestParam(value = "size", required = false) Integer size, @RequestHeader("X-Sharer-User-Id") long userId) {
+    public ResponseEntity<Object> getAllRequests(@PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                                 @Positive @RequestParam(name = "size", defaultValue = "10") Integer size, @RequestHeader("X-Sharer-User-Id") long userId) {
         log.info("getAllRequests userId: {}, from: {}, size: {}", userId, from, size);
         return requestClient.getAllrequests(userId, from, size);
     }

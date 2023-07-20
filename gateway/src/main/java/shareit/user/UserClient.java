@@ -27,12 +27,10 @@ public class UserClient extends BaseClient {
 
 
     public ResponseEntity<Object> getAllUsers() {
-        int k = 1;
         return get("");
     }
 
     public ResponseEntity<Object> createUser(UserDto userDTO) {
-        int k = 1;
         return post("", userDTO);
     }
 

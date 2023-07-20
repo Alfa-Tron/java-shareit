@@ -2,15 +2,18 @@ package shareit.booking;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import shareit.booking.dto.BookingDtoIn;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
+import java.time.LocalDateTime;
 
 @Controller
 @RequestMapping(path = "/bookings")
@@ -26,6 +29,7 @@ public class BookingController {
                                               @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                               @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Get booking with state {}, userId={}, from={}, size={}", stateParam, userId, from, size);
+
         return bookingClient.getBookings(userId, stateParam, from, size);
     }
 
@@ -33,6 +37,11 @@ public class BookingController {
     public ResponseEntity<Object> bookItem(@RequestHeader("X-Sharer-User-Id") long userId,
                                            @RequestBody @Valid BookingDtoIn requestDto) {
         log.info("Creating booking {}, userId={}", requestDto, userId);
+        LocalDateTime start = requestDto.getStart();
+        LocalDateTime end = requestDto.getEnd();
+        if (start.isAfter(end)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "startTime < EndTime");
+        if (start.isEqual(end)) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "startTime = EndTime");
+
         return bookingClient.bookItem(userId, requestDto);
     }
 
@@ -50,7 +59,8 @@ public class BookingController {
     }
 
     @GetMapping("/owner")
-    public ResponseEntity<Object> getBookingOwner(@RequestHeader("X-Sharer-User-Id") long userId, @RequestParam(defaultValue = "ALL") String state, @PositiveOrZero @RequestParam(value = "from", required = false) Integer from, @Positive @RequestParam(value = "size", required = false) Integer size) {
+    public ResponseEntity<Object> getBookingOwner(@RequestHeader("X-Sharer-User-Id") long userId, @RequestParam(defaultValue = "ALL") String state, @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                                  @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("getBookingOwner userId: {}, from: {}, size: {}", userId, from, size);
         return bookingClient.getBookingOwner(userId, state, from, size);
     }

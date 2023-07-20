@@ -22,6 +22,6 @@ public class ItemDtoIn {
     private String description;
     @NotNull(groups = Marker.OnCreate.class)
     private Boolean available;
-    private long requestId;
+    private Long requestId;
 
 }

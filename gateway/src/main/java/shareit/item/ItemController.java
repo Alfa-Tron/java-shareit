@@ -34,13 +34,15 @@ public class ItemController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> getItemByUser(@RequestHeader("X-Sharer-User-Id") long userId, @PositiveOrZero @RequestParam(value = "from", required = false) Integer from, @Positive @RequestParam(value = "size", required = false) Integer size) {
+    public ResponseEntity<Object> getItemByUser(@RequestHeader("X-Sharer-User-Id") long userId, @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                                @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("getItemByUser userId: {}, from: {}, size: {}", userId, from, size);
         return itemClient.getItemByUser(userId, from, size);
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Object> searchItems(@RequestParam("text") String searchText, @PositiveOrZero @RequestParam(value = "from", required = false) Integer from, @Positive @RequestParam(value = "size", required = false) Integer size) {
+    public ResponseEntity<Object> searchItems(@RequestParam("text") String searchText, @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                              @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("searchItems searchText: {}, from: {}, size: {}", searchText, from, size);
         return itemClient.searchItems(searchText, from, size);
     }
